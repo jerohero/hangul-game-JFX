@@ -35,6 +35,7 @@ public class Main extends Application {
     private boolean canJump = true;
 
     private int levelWidth;
+    private int blockSize;
 
     private boolean dialogEvent = false, running = true;
 
@@ -42,7 +43,8 @@ public class Main extends Application {
         Image bgImg = new Image("sample/resources/img/bg.jpg");
         ImageView bg = new ImageView(bgImg);
 
-        levelWidth = LevelData.LEVEL1[0].length() * 60;             // 60 is block size ofzo
+        blockSize = 60;
+        levelWidth = LevelData.LEVEL1[0].length() * blockSize;
 
         for (int i = 0; i < LevelData.LEVEL1.length; i++) {
             String line = LevelData.LEVEL1[i];
@@ -51,15 +53,15 @@ public class Main extends Application {
                     case '0':
                         break;
                     case '1':
-                        Node platform = createEntity(j*60, i*60, 60, 60, "sample/resources/img/floortile.png");
+                        Node platform = createEntity(j*blockSize, i*blockSize, 60, 60, "sample/resources/img/floortile.png");
                         platforms.add(platform);
                         break;
                     case '2':
-                        Node enemy = createEntity(j*60, i*60, 60, 60, "sample/resources/img/enemy1.png");
+                        Node enemy = createEntity(j*blockSize, i*blockSize, 93, 133, "sample/resources/img/enemy1.png");
                         enemies.add(enemy);
                         break;
                     case '3':
-                        player = createEntity(j*60, i*60, 40, 40, "sample/resources/img/enemy1.png");
+                        player = createEntity(j*blockSize, i*blockSize, 40, 40, "sample/resources/img/enemy1.png");
                         break;
                 }
             }
@@ -124,7 +126,7 @@ public class Main extends Application {
                         }
                     }
                     else {                                                                      //height player
-                        if (player.getTranslateX() == platform.getTranslateX() + 60) {
+                        if (player.getTranslateX() == platform.getTranslateX() + blockSize) {
                             return;
                         }
                     }
@@ -148,7 +150,7 @@ public class Main extends Application {
                         }
                     }
                     else {
-                        if (player.getTranslateY() == platform.getTranslateY() + 60) {
+                        if (player.getTranslateY() == platform.getTranslateY() + blockSize) {
                             return;
                         }
                     }
@@ -168,6 +170,8 @@ public class Main extends Application {
     private Node createEntity(int x, int y, int w, int h, String path) {
         Image img = new Image(path);
         ImageView entity = new ImageView(img);
+        entity.setFitHeight(h);
+        entity.setFitWidth(w);
         entity.setTranslateX(x);
         entity.setTranslateY(y);
         entity.getProperties().put("alive", true);
