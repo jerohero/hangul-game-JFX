@@ -57,7 +57,7 @@ public class Main extends Application {
                         platforms.add(platform);
                         break;
                     case '2':
-                        Node enemy = createEntity(j*blockSize, i*blockSize, 93, 133, "sample/resources/img/enemy1.png");
+                        Node enemy = createEntity(j*blockSize, i*blockSize-(133/2+7), 93, 133, "sample/resources/img/enemy1.png");
                         enemies.add(enemy);
                         break;
                     case '3':
