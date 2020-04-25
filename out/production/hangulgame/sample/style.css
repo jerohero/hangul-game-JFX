@@ -10,3 +10,7 @@
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
 }
+
+.questiontxt{
+    -fx-font: normal normal 90px 'serif';
+}

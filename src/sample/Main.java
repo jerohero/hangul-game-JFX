@@ -1,11 +1,14 @@
 package sample;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -13,6 +16,10 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -24,6 +31,7 @@ public class Main extends Application {
 
     private ArrayList<Node> platforms = new ArrayList<Node>();
     private ArrayList<Node> enemies = new ArrayList<Node>();
+    private ArrayList<Answer> buttons = new ArrayList<Answer>();
 
     private Pane appRoot = new Pane();
     private Pane gameRoot = new Pane();
@@ -74,26 +82,43 @@ public class Main extends Application {
                         playerWidth = 76; playerHeight = 126;
                         player = createSprite(j*blockSize, i*blockSize-(126/2+4), playerWidth, playerHeight, "sample/resources/img/player.png");
                         break;
+                    case '4':
+                        String hangul = "동";
+                        Question question = new Question(hangul, j*blockSize, i*blockSize-180);
+                        gameRoot.getChildren().add(question);
+                        break;
                     case '6':
                         Answer button1 = new Answer("g", j*blockSize - 23, i*blockSize);
                         uiRoot.getChildren().add(button1);
+                        buttons.add(button1);
                         break;
                     case '7':
                         Answer button2 = new Answer("j", j*blockSize - 20, i*blockSize);
                         uiRoot.getChildren().add(button2);
+                        buttons.add(button2);
                         break;
                     case '8':
                         Answer button3 = new Answer("b", j*blockSize - 23, i*blockSize);
                         uiRoot.getChildren().add(button3);
+                        buttons.add(button3);
                         break;
                     case '9':
                         Answer button4 = new Answer("ch", j*blockSize - 20, i*blockSize);
                         uiRoot.getChildren().add(button4);
+                        buttons.add(button4);
                         break;
                 }
             }
         }
 
+        for (Answer button : buttons){
+            button.setOnMouseClicked(event -> {
+//                System.out.println(button.getAnswer());
+
+            });
+        }
+
+        appRoot.setStyle("-fx-background-color: #e3d7bf");
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
 
@@ -193,7 +218,7 @@ public class Main extends Application {
         Scene scene = new Scene(appRoot);
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
-        primaryStage.setTitle("Hangul game");
+        primaryStage.setTitle("한글");
         primaryStage.setScene(scene);
 //        primaryStage.setResizable(false);
         primaryStage.show();
