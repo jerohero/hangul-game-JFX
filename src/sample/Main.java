@@ -28,7 +28,7 @@ public class Main extends Application {
     private Pane gameRoot = new Pane();
     private Pane uiRoot = new Pane();
 
-    private Node player;
+    private ImageView player;
     private Point2D playerVelocity = new Point2D(0, 0);
     private boolean canJump = true;
 
@@ -37,6 +37,8 @@ public class Main extends Application {
 
     private int playerWidth;
     private int playerHeight;
+    private int playerX;
+    private int playerY;
 
     private boolean dialogEvent = false, running = true;
 
@@ -89,15 +91,12 @@ public class Main extends Application {
             changeSpriteImg(player, "sample/resources/img/playerv2.png");
         }
         if(animationtick == 120){
-            changeSpriteImg(player, "sample/resources/img/player.png");
             animationtick = 0;
+            changeSpriteImg(player, "sample/resources/img/player.png");
         }
     }
 
     private void update() {
-        //        if(tick % 60 == 0){
-//            second++;
-//        }
         globaltick++;
         animationtick++;
         playerAnimation(animationtick);
@@ -173,21 +172,15 @@ public class Main extends Application {
         }
     }
 
-    private void changeSpriteImg(Node sprite, String path){
-        gameRoot.getChildren().removeAll(player);
-        player = createSprite((int)player.getTranslateX(), (int)player.getTranslateY(), playerWidth, playerHeight, path);
-        gameRoot.getChildren().add(player);
+    private void changeSpriteImg(ImageView sprite, String path){
+        Image image = new Image(path);
+        sprite.setImage(image);
     }
 
-    private Node createSprite(int x, int y, int w, int h, String path) {
-        Image img = new Image(path);
-        ImageView sprite = new ImageView(img);
-        sprite.setFitHeight(h);
-        sprite.setFitWidth(w);
-        sprite.setTranslateX(x);
-        sprite.setTranslateY(y);
-        sprite.getProperties().put("alive", true);
 
+    private ImageView createSprite(int x, int y, int w, int h, String path){
+        Sprite spriteObj = new Sprite(x, y, w, h, path);
+        ImageView sprite = spriteObj.createSprite();
         gameRoot.getChildren().add(sprite);
         return sprite;
     }
