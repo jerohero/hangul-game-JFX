@@ -13,11 +13,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import sample.LevelData;
+
+import javax.swing.text.html.parser.Entity;
 
 public class Main extends Application {
 
@@ -39,6 +37,10 @@ public class Main extends Application {
 
     private boolean dialogEvent = false, running = true;
 
+    private int globaltick;
+    private int animationtick;
+    private int second;
+
     private void initContent() {
         Image bgImg = new Image("sample/resources/img/bg.jpg");
         ImageView bg = new ImageView(bgImg);
@@ -53,15 +55,15 @@ public class Main extends Application {
                     case '0':
                         break;
                     case '1':
-                        Node platform = createEntity(j*blockSize, i*blockSize, 60, 60, "sample/resources/img/floortile.png");
+                        Node platform = createSprite(j*blockSize, i*blockSize, 60, 60, "sample/resources/img/floortile.png");
                         platforms.add(platform);
                         break;
                     case '2':
-                        Node enemy = createEntity(j*blockSize, i*blockSize-(133/2+7), 93, 133, "sample/resources/img/enemy1.png");
+                        Node enemy = createSprite(j*blockSize, i*blockSize-(133/2+45), 120, 172, "sample/resources/img/enemy1.png");
                         enemies.add(enemy);
                         break;
                     case '3':
-                        player = createEntity(j*blockSize, i*blockSize, 40, 40, "sample/resources/img/enemy1.png");
+                        player = createSprite(j*blockSize, i*blockSize-(126/2+4), 76, 126, "sample/resources/img/player.png");
                         break;
                 }
             }
@@ -78,10 +80,23 @@ public class Main extends Application {
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
 
-    private void update() {
-        if (isPressed(KeyCode.W) && player.getTranslateY() >= 5) {
-            jumpPlayer();
+    private void playerAnimation(int second){
+        if(animationtick == 60){
+//            changeSpriteImg(player, "sample/resources/img/playerv2.png");
         }
+    }
+
+    private void update() {
+        //        if(tick % 60 == 0){
+//            second++;
+//        }
+        globaltick++;
+        animationtick++;
+        playerAnimation(animationtick);
+
+//        if (isPressed(KeyCode.W) && player.getTranslateY() >= 5) {
+//            jumpPlayer();
+//        }
 
         if (isPressed(KeyCode.A) && player.getTranslateX() >= 5) {
             movePlayerX(-5);
@@ -90,12 +105,12 @@ public class Main extends Application {
         if (isPressed(KeyCode.D) && player.getTranslateX() + 40 <= levelWidth - 5) {
             movePlayerX(5);
         }
+//
+//        if (playerVelocity.getY() < 10) {
+//            playerVelocity = playerVelocity.add(0, 1);
+//        }
 
-        if (playerVelocity.getY() < 10) {
-            playerVelocity = playerVelocity.add(0, 1);
-        }
-
-        movePlayerY((int)playerVelocity.getY());
+//        movePlayerY((int)playerVelocity.getY());
 
         for (Node enemy : enemies) {
             if (player.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
@@ -160,24 +175,26 @@ public class Main extends Application {
         }
     }
 
-    private void jumpPlayer() {
-        if (canJump) {
-            playerVelocity = playerVelocity.add(0, -30);
-            canJump = false;
-        }
+//    private void jumpPlayer() {
+//        if (canJump) {
+//            playerVelocity = playerVelocity.add(0, -30);
+//            canJump = false;
+//        }
+//    }
+
+//    private void changeEntityImage(Node entity, String path){
+//        player = createEntity((int)player.getTranslateX(), (int)player.getTranslateY(), player.getFitHeight(), (int)player.getTranslateY(), path);
+//    }
+
+    private Node createSprite(int x, int y, int w, int h, String path) {
+        Sprite sprite = new Sprite(x, y, w, h, path);
+
+        gameRoot.getChildren().add(sprite.getSprite());
+        return sprite;
     }
 
-    private Node createEntity(int x, int y, int w, int h, String path) {
-        Image img = new Image(path);
-        ImageView entity = new ImageView(img);
-        entity.setFitHeight(h);
-        entity.setFitWidth(w);
-        entity.setTranslateX(x);
-        entity.setTranslateY(y);
-        entity.getProperties().put("alive", true);
-
-        gameRoot.getChildren().add(entity);
-        return entity;
+    private Pane getGameRoot(){
+        return gameRoot;
     }
 
     private boolean isPressed(KeyCode key) {
