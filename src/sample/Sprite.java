@@ -34,4 +34,49 @@ public class Sprite {
         return sprite;
     }
 
+
+    public static void changeSpriteImg(ImageView sprite, String path){
+        Image image = new Image(path);
+        sprite.setImage(image);
+    }
+
+//    public static void spriteAnimation(ImageView sprite, int animationtick, String type) {
+//        if(type == "player"){
+//            if(animationtick == 60){
+//                changeSpriteImg(sprite, "sample/resources/img/player.png");
+//            }
+//            if(animationtick == 120){
+//                changeSpriteImg(sprite, "sample/resources/img/playerv2.png");
+//            }
+//        }
+//        else if(type == "enemy"){
+//            if(animationtick == 60){
+//                changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
+//            }
+//            if(animationtick == 120){
+//                changeSpriteImg(sprite, "sample/resources/img/enemy1v2.png");
+//            }
+//        }
+//    }
+public static void spriteAnimation(ImageView sprite, int animationtick, String type) {
+    if(type == "player"){
+        if(animationtick % 60 == 0){
+            changeSpriteImg(sprite, "sample/resources/img/player.png");
+        }
+        if(animationtick % 120 == 0){
+            changeSpriteImg(sprite, "sample/resources/img/playerv2.png");
+        }
+    }
+    else if(type == "enemy"){
+        if(animationtick % 60 == 0){
+            changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
+        }
+        if(animationtick % 120 == 0){
+            changeSpriteImg(sprite, "sample/resources/img/enemy1v2.png");
+        }
+        if(animationtick % 420 == 0){
+            changeSpriteImg(sprite, "sample/resources/img/enemy1v3.png");
+        }
+    }
+}
 }

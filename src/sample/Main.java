@@ -29,8 +29,10 @@ public class Main extends Application {
     private Pane uiRoot = new Pane();
 
     private ImageView player;
+    private ImageView enemy;
     private Point2D playerVelocity = new Point2D(0, 0);
     private boolean canJump = true;
+    private Sprite sprite;
 
     private int levelWidth;
     private int blockSize;
@@ -64,7 +66,7 @@ public class Main extends Application {
                         platforms.add(platform);
                         break;
                     case '2':
-                        Node enemy = createSprite(j*blockSize, i*blockSize-(133/2+45), 120, 172, "sample/resources/img/enemy1.png");
+                        enemy = createSprite(j*blockSize, i*blockSize-(133/2+45), 120, 172, "sample/resources/img/enemy1.png");
                         enemies.add(enemy);
                         break;
                     case '3':
@@ -75,31 +77,30 @@ public class Main extends Application {
             }
         }
 
-//        player.translateXProperty().addListener((obs, old, newValue) -> {
-//            int offset = newValue.intValue();
-//
-//            if (offset > 640 && offset < levelWidth - 640) {
-//                gameRoot.setLayoutX(-(offset - 640));
-//            }
-//        });
-
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
 
-    private void playerAnimation(int second){
-        if(animationtick == 60){
-            changeSpriteImg(player, "sample/resources/img/playerv2.png");
-        }
-        if(animationtick == 120){
-            animationtick = 0;
-            changeSpriteImg(player, "sample/resources/img/player.png");
-        }
-    }
+    //    private void changeSpriteImg(ImageView sprite, String path){
+//        Image image = new Image(path);
+//        sprite.setImage(image);
+//    }
+
+//    private void playerAnimation(int second){
+//        if(animationtick == 60){
+//            player.changeSpriteImg(player, "sample/resources/img/playerv2.png");
+//        }
+//        if(animationtick == 120){
+//            animationtick = 0;
+//            changeSpriteImg(player, "sample/resources/img/player.png");
+//        }
+//    }
 
     private void update() {
         globaltick++;
         animationtick++;
-        playerAnimation(animationtick);
+
+        sprite.spriteAnimation(player, animationtick, "player");
+        sprite.spriteAnimation(enemy, animationtick, "enemy");
 
         if (isPressed(KeyCode.A) && player.getTranslateX() >= 5) {
             movePlayerX(-5);
@@ -170,11 +171,6 @@ public class Main extends Application {
             }
             player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
         }
-    }
-
-    private void changeSpriteImg(ImageView sprite, String path){
-        Image image = new Image(path);
-        sprite.setImage(image);
     }
 
 
