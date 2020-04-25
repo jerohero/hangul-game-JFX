@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -73,27 +74,28 @@ public class Main extends Application {
                         playerWidth = 76; playerHeight = 126;
                         player = createSprite(j*blockSize, i*blockSize-(126/2+4), playerWidth, playerHeight, "sample/resources/img/player.png");
                         break;
+                    case '6':
+                        Answer button1 = new Answer("g", j*blockSize - 23, i*blockSize);
+                        uiRoot.getChildren().add(button1);
+                        break;
+                    case '7':
+                        Answer button2 = new Answer("j", j*blockSize - 20, i*blockSize);
+                        uiRoot.getChildren().add(button2);
+                        break;
+                    case '8':
+                        Answer button3 = new Answer("b", j*blockSize - 23, i*blockSize);
+                        uiRoot.getChildren().add(button3);
+                        break;
+                    case '9':
+                        Answer button4 = new Answer("ch", j*blockSize - 20, i*blockSize);
+                        uiRoot.getChildren().add(button4);
+                        break;
                 }
             }
         }
 
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
-
-    //    private void changeSpriteImg(ImageView sprite, String path){
-//        Image image = new Image(path);
-//        sprite.setImage(image);
-//    }
-
-//    private void playerAnimation(int second){
-//        if(animationtick == 60){
-//            player.changeSpriteImg(player, "sample/resources/img/playerv2.png");
-//        }
-//        if(animationtick == 120){
-//            animationtick = 0;
-//            changeSpriteImg(player, "sample/resources/img/player.png");
-//        }
-//    }
 
     private void update() {
         globaltick++;
@@ -173,16 +175,11 @@ public class Main extends Application {
         }
     }
 
-
     private ImageView createSprite(int x, int y, int w, int h, String path){
         Sprite spriteObj = new Sprite(x, y, w, h, path);
         ImageView sprite = spriteObj.createSprite();
         gameRoot.getChildren().add(sprite);
         return sprite;
-    }
-
-    private Pane getGameRoot(){
-        return gameRoot;
     }
 
     private boolean isPressed(KeyCode key) {
@@ -198,6 +195,7 @@ public class Main extends Application {
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
         primaryStage.setTitle("Hangul game");
         primaryStage.setScene(scene);
+//        primaryStage.setResizable(false);
         primaryStage.show();
 
         AnimationTimer timer = new AnimationTimer() {
@@ -207,23 +205,23 @@ public class Main extends Application {
                     update();
                 }
 
-                if (dialogEvent) {
-                    dialogEvent = false;
-                    keys.keySet().forEach(key -> keys.put(key, false));
-
-                    GameDialog dialog = new GameDialog();
-                    dialog.setOnCloseRequest(event -> {
-                        if (dialog.isCorrect()) {
-                            System.out.println("Correct");
-                        }
-                        else {
-                            System.out.println("Wrong");
-                        }
-
-                        running = true;
-                    });
-                    dialog.open();
-                }
+//                if (dialogEvent) {
+//                    dialogEvent = false;
+//                    keys.keySet().forEach(key -> keys.put(key, false));
+//
+//                    GameDialog dialog = new GameDialog();
+//                    dialog.setOnCloseRequest(event -> {
+//                        if (dialog.isCorrect()) {
+//                            System.out.println("Correct");
+//                        }
+//                        else {
+//                            System.out.println("Wrong");
+//                        }
+//
+//                        running = true;
+//                    });
+//                    dialog.open();
+//                }
             }
         };
         timer.start();

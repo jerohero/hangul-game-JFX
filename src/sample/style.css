@@ -1,0 +1,12 @@
+.answer{
+    -fx-cursor: hand;
+    -fx-background-color: #dce5e4;
+    -fx-font: normal bold 40px 'serif';
+    -fx-scale-x: 1.3;
+    -fx-scale-y: 1.3;
+    -fx-border-style: solid;
+    -fx-border-color: #c9aa8b;
+    -fx-min-width: 120px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
