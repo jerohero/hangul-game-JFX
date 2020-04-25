@@ -35,6 +35,9 @@ public class Main extends Application {
     private int levelWidth;
     private int blockSize;
 
+    private int playerWidth;
+    private int playerHeight;
+
     private boolean dialogEvent = false, running = true;
 
     private int globaltick;
@@ -63,7 +66,8 @@ public class Main extends Application {
                         enemies.add(enemy);
                         break;
                     case '3':
-                        player = createSprite(j*blockSize, i*blockSize-(126/2+4), 76, 126, "sample/resources/img/player.png");
+                        playerWidth = 76; playerHeight = 126;
+                        player = createSprite(j*blockSize, i*blockSize-(126/2+4), playerWidth, playerHeight, "sample/resources/img/player.png");
                         break;
                 }
             }
@@ -82,7 +86,11 @@ public class Main extends Application {
 
     private void playerAnimation(int second){
         if(animationtick == 60){
-//            changeSpriteImg(player, "sample/resources/img/playerv2.png");
+            changeSpriteImg(player, "sample/resources/img/playerv2.png");
+        }
+        if(animationtick == 120){
+            changeSpriteImg(player, "sample/resources/img/player.png");
+            animationtick = 0;
         }
     }
 
@@ -94,10 +102,6 @@ public class Main extends Application {
         animationtick++;
         playerAnimation(animationtick);
 
-//        if (isPressed(KeyCode.W) && player.getTranslateY() >= 5) {
-//            jumpPlayer();
-//        }
-
         if (isPressed(KeyCode.A) && player.getTranslateX() >= 5) {
             movePlayerX(-5);
         }
@@ -105,12 +109,6 @@ public class Main extends Application {
         if (isPressed(KeyCode.D) && player.getTranslateX() + 40 <= levelWidth - 5) {
             movePlayerX(5);
         }
-//
-//        if (playerVelocity.getY() < 10) {
-//            playerVelocity = playerVelocity.add(0, 1);
-//        }
-
-//        movePlayerY((int)playerVelocity.getY());
 
         for (Node enemy : enemies) {
             if (player.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
@@ -175,21 +173,22 @@ public class Main extends Application {
         }
     }
 
-//    private void jumpPlayer() {
-//        if (canJump) {
-//            playerVelocity = playerVelocity.add(0, -30);
-//            canJump = false;
-//        }
-//    }
-
-//    private void changeEntityImage(Node entity, String path){
-//        player = createEntity((int)player.getTranslateX(), (int)player.getTranslateY(), player.getFitHeight(), (int)player.getTranslateY(), path);
-//    }
+    private void changeSpriteImg(Node sprite, String path){
+        gameRoot.getChildren().removeAll(player);
+        player = createSprite((int)player.getTranslateX(), (int)player.getTranslateY(), playerWidth, playerHeight, path);
+        gameRoot.getChildren().add(player);
+    }
 
     private Node createSprite(int x, int y, int w, int h, String path) {
-        Sprite sprite = new Sprite(x, y, w, h, path);
+        Image img = new Image(path);
+        ImageView sprite = new ImageView(img);
+        sprite.setFitHeight(h);
+        sprite.setFitWidth(w);
+        sprite.setTranslateX(x);
+        sprite.setTranslateY(y);
+        sprite.getProperties().put("alive", true);
 
-        gameRoot.getChildren().add(sprite.getSprite());
+        gameRoot.getChildren().add(sprite);
         return sprite;
     }
 
