@@ -43,9 +43,9 @@ public class Question extends Pane {
         this.setTranslateY(Main.getQuestionRow() * Main.getBlockSize() - 180);
     }
 
-//    public String getCorrectAnswer(){
-//        return answer;
-//    }
+    public String getCorrectAnswer(){
+        return answer;
+    }
 
     public boolean isCorrect(String answered){
         if (answered == answer){

@@ -1,18 +1,18 @@
 package sample;
 
-public class LevelData {
-    public static final String[] LEVEL1 = new String[] {
+public class UIData {
+    public static final String[] UI = new String[] {
             "0000000000",
             "0000000000",
             "0000000000",
             "0000000000",
             "0000000000",
-            "0000004000",
-            "0300002000",
-            "1111111111",
             "0000000000",
             "0000000000",
             "0000000000",
+            "0010020000",
+            "0000000000",
+            "0030040000",
             "0000000000"
     };
 }

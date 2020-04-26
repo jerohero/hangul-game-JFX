@@ -1,6 +1,7 @@
 package sample;
 
 import java.awt.*;
+import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -92,29 +93,39 @@ public class Main extends Application {
                     case '4':
                         questionColumn = column;
                         questionRow = row;
-                        String hangul = "ㄱ";
-                        String romanized = "g";
+                        String hangul = "ㅐ";
+                        String romanized = "ae";
 
                         question = new Question(hangul, romanized);
                         gameRoot.getChildren().add(question);
                         break;
-                    case '6':
-                        Answer button1 = new Answer("g", column*blockSize - 23, row*blockSize);
+                }
+            }
+        }
+
+        for (int row = 0; row < UIData.UI.length; row++) {
+            String line = UIData.UI[row];
+            for (int column = 0; column < line.length(); column++) {
+                switch (line.charAt(column)) {
+                    case '0':
+                        break;
+                    case '1':
+                        Answer button1 = new Answer("g", column * blockSize - 23, row * blockSize);
                         uiRoot.getChildren().add(button1);
                         buttons.add(button1);
                         break;
-                    case '7':
-                        Answer button2 = new Answer("j", column*blockSize - 20, row*blockSize);
+                    case '2':
+                        Answer button2 = new Answer("ae", column * blockSize - 20, row * blockSize);
                         uiRoot.getChildren().add(button2);
                         buttons.add(button2);
                         break;
-                    case '8':
-                        Answer button3 = new Answer("b", column*blockSize - 23, row*blockSize);
+                    case '3':
+                        Answer button3 = new Answer("b", column * blockSize - 23, row * blockSize);
                         uiRoot.getChildren().add(button3);
                         buttons.add(button3);
                         break;
-                    case '9':
-                        Answer button4 = new Answer("ch", column*blockSize - 20, row*blockSize);
+                    case '4':
+                        Answer button4 = new Answer("ch", column * blockSize - 20, row * blockSize);
                         uiRoot.getChildren().add(button4);
                         buttons.add(button4);
                         break;
@@ -124,14 +135,29 @@ public class Main extends Application {
 
         for (Answer button : buttons){
             button.setOnMouseClicked(event -> {
-                question.isCorrect(button.getAnswer());
-                System.out.println(question.isCorrect(button.getAnswer()));
-
+                if(question.isCorrect(button.getAnswer())){
+                    //volgende vraag
+                    answeredCorrectly(question.getCorrectAnswer());
+                }
+                else{
+                    //takehit
+                }
             });
         }
 
         appRoot.setStyle("-fx-background-color: #e3d7bf");
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
+    }
+
+    private void answeredCorrectly(String answer){
+        int i = 0;
+        for (Map questionAnswer : questions) {
+            if(questionAnswer.values().contains(answer)){
+                questions.remove(i);
+            }
+            i++;
+        }
+//        questions.remove()
     }
 
     private void update() {
@@ -241,24 +267,6 @@ public class Main extends Application {
                 if (running) {
                     update();
                 }
-
-//                if (dialogEvent) {
-//                    dialogEvent = false;
-//                    keys.keySet().forEach(key -> keys.put(key, false));
-//
-//                    GameDialog dialog = new GameDialog();
-//                    dialog.setOnCloseRequest(event -> {
-//                        if (dialog.isCorrect()) {
-//                            System.out.println("Correct");
-//                        }
-//                        else {
-//                            System.out.println("Wrong");
-//                        }
-//
-//                        running = true;
-//                    });
-//                    dialog.open();
-//                }
             }
         };
         timer.start();
