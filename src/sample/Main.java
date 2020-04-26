@@ -1,7 +1,5 @@
 package sample;
 
-import java.awt.*;
-import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,23 +7,14 @@ import java.util.Map;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-import javax.swing.text.html.parser.Entity;
 
 public class Main extends Application {
 
@@ -62,7 +51,7 @@ public class Main extends Application {
     private boolean dialogEvent = false, running = true;
 
     private int globaltick;
-    private int animationtick;
+    private static int animationtick;
     private int second;
 
     private void initContent() {
@@ -93,8 +82,8 @@ public class Main extends Application {
                     case '4':
                         questionColumn = column;
                         questionRow = row;
-                        String hangul = "ㅐ";
-                        String romanized = "ae";
+                        String hangul = "ㅊ";
+                        String romanized = "ch";
 
                         question = new Question(hangul, romanized);
                         gameRoot.getChildren().add(question);
@@ -145,6 +134,10 @@ public class Main extends Application {
             });
         }
 
+        Map<String, String> levelQuestions = QuestionUtils.getQuestions(1);
+
+
+
         appRoot.setStyle("-fx-background-color: #e3d7bf");
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
@@ -153,19 +146,19 @@ public class Main extends Application {
         int i = 0;
         for (Map questionAnswer : questions) {
             if(questionAnswer.values().contains(answer)){
-                questions.remove(i);
+//                questions.remove(i);
+                Sprite.spriteHit(enemy, animationtick, "enemy");
             }
             i++;
         }
-//        questions.remove()
     }
 
     private void update() {
         globaltick++;
         animationtick++;
 
-        sprite.spriteAnimation(player, animationtick, "player");
-        sprite.spriteAnimation(enemy, animationtick, "enemy");
+        Sprite.spriteIdle(player, animationtick, "player");
+        Sprite.spriteIdle(enemy, animationtick, "enemy");
 
         if (isPressed(KeyCode.A) && player.getTranslateX() >= 5) {
             movePlayerX(-5);
@@ -253,12 +246,12 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         initContent();
 
-        Scene scene = new Scene(appRoot);
+        Scene scene = new Scene(appRoot, 490, 700);
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
         primaryStage.setTitle("한글");
         primaryStage.setScene(scene);
-//        primaryStage.setResizable(false);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
         AnimationTimer timer = new AnimationTimer() {
@@ -287,10 +280,14 @@ public class Main extends Application {
         return questionRow;
     }
 
-//    public static ArrayList<Map> getQuestionsArray(){
-//        return questions;
-//    }
+    public static ArrayList<Map> getQuestionsArray(){
+        return questions;
+    }
     public static void addToQuestionsArray(Map questionAnswer){
         questions.add(questionAnswer);
+    }
+
+    public static void setAnimationTick(int newAnimationtick){
+        animationtick = newAnimationtick;
     }
 }
