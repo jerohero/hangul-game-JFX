@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -33,6 +34,8 @@ public class Main extends Application {
     private ArrayList<Node> enemies = new ArrayList<Node>();
     private ArrayList<Answer> buttons = new ArrayList<Answer>();
 
+    private static ArrayList<Map> questions = new ArrayList<>();
+
     private Pane appRoot = new Pane();
     private Pane gameRoot = new Pane();
     private Pane uiRoot = new Pane();
@@ -42,9 +45,13 @@ public class Main extends Application {
     private Point2D playerVelocity = new Point2D(0, 0);
     private boolean canJump = true;
     private Sprite sprite;
+    private Question question;
 
     private int levelWidth;
-    private int blockSize;
+    private static int blockSize;
+
+    private static int questionColumn;
+    private static int questionRow;
 
     private int playerWidth;
     private int playerHeight;
@@ -64,46 +71,50 @@ public class Main extends Application {
         blockSize = 60;
         levelWidth = LevelData.LEVEL1[0].length() * blockSize;
 
-        for (int i = 0; i < LevelData.LEVEL1.length; i++) {
-            String line = LevelData.LEVEL1[i];
-            for (int j = 0; j < line.length(); j++) {
-                switch (line.charAt(j)) {
+        for (int row = 0; row < LevelData.LEVEL1.length; row++) {
+            String line = LevelData.LEVEL1[row];
+            for (int column = 0; column < line.length(); column++) {
+                switch (line.charAt(column)) {
                     case '0':
                         break;
                     case '1':
-                        Node platform = createSprite(j*blockSize, i*blockSize, 60, 60, "sample/resources/img/floortile.png");
+                        Node platform = createSprite(column*blockSize, row*blockSize, 60, 60, "sample/resources/img/floortile.png");
                         platforms.add(platform);
                         break;
                     case '2':
-                        enemy = createSprite(j*blockSize, i*blockSize-(133/2+45), 120, 172, "sample/resources/img/enemy1.png");
+                        enemy = createSprite(column*blockSize, row*blockSize-(133/2+45), 120, 172, "sample/resources/img/enemy1.png");
                         enemies.add(enemy);
                         break;
                     case '3':
                         playerWidth = 76; playerHeight = 126;
-                        player = createSprite(j*blockSize, i*blockSize-(126/2+4), playerWidth, playerHeight, "sample/resources/img/player.png");
+                        player = createSprite(column*blockSize, row*blockSize-(126/2+4), playerWidth, playerHeight, "sample/resources/img/player.png");
                         break;
                     case '4':
-                        String hangul = "동";
-                        Question question = new Question(hangul, j*blockSize, i*blockSize-180);
+                        questionColumn = column;
+                        questionRow = row;
+                        String hangul = "ㄱ";
+                        String romanized = "g";
+
+                        question = new Question(hangul, romanized);
                         gameRoot.getChildren().add(question);
                         break;
                     case '6':
-                        Answer button1 = new Answer("g", j*blockSize - 23, i*blockSize);
+                        Answer button1 = new Answer("g", column*blockSize - 23, row*blockSize);
                         uiRoot.getChildren().add(button1);
                         buttons.add(button1);
                         break;
                     case '7':
-                        Answer button2 = new Answer("j", j*blockSize - 20, i*blockSize);
+                        Answer button2 = new Answer("j", column*blockSize - 20, row*blockSize);
                         uiRoot.getChildren().add(button2);
                         buttons.add(button2);
                         break;
                     case '8':
-                        Answer button3 = new Answer("b", j*blockSize - 23, i*blockSize);
+                        Answer button3 = new Answer("b", column*blockSize - 23, row*blockSize);
                         uiRoot.getChildren().add(button3);
                         buttons.add(button3);
                         break;
                     case '9':
-                        Answer button4 = new Answer("ch", j*blockSize - 20, i*blockSize);
+                        Answer button4 = new Answer("ch", column*blockSize - 20, row*blockSize);
                         uiRoot.getChildren().add(button4);
                         buttons.add(button4);
                         break;
@@ -113,7 +124,8 @@ public class Main extends Application {
 
         for (Answer button : buttons){
             button.setOnMouseClicked(event -> {
-//                System.out.println(button.getAnswer());
+                question.isCorrect(button.getAnswer());
+                System.out.println(question.isCorrect(button.getAnswer()));
 
             });
         }
@@ -254,5 +266,23 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static int getBlockSize(){
+        return blockSize;
+    }
+
+    public static int getQuestionColumn(){
+        return questionColumn;
+    }
+    public static int getQuestionRow(){
+        return questionRow;
+    }
+
+//    public static ArrayList<Map> getQuestionsArray(){
+//        return questions;
+//    }
+    public static void addToQuestionsArray(Map questionAnswer){
+        questions.add(questionAnswer);
     }
 }

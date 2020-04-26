@@ -19,8 +19,4 @@ public class Answer extends Button {
     public String getAnswer(){
         return answer;
     }
-
-    public void checkAnswer(){
-
-    }
 }
