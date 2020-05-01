@@ -3,8 +3,6 @@ package sample;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javax.swing.text.Element;
-
 public class Sprite {
     private int h;
     private int w;
@@ -56,9 +54,9 @@ public class Sprite {
             if(animationtick % 120 == 0){
                 changeSpriteImg(sprite, "sample/resources/img/enemy1v2.png");
             }
-            if(animationtick % 420 == 0){
-                changeSpriteImg(sprite, "sample/resources/img/enemy1v3.png");
-            }
+//            if(animationtick % 420 == 0){
+//                changeSpriteImg(sprite, "sample/resources/img/enemy1v3old.png");
+//            }
         }
     }
 

@@ -55,7 +55,7 @@ public class Main extends Application {
     private int second;
 
     private void initContent() {
-        Image bgImg = new Image("sample/resources/img/bg.jpg");
+        Image bgImg = new Image("sample/resources/img/bg.png");
         ImageView bg = new ImageView(bgImg);
 
         blockSize = 60;
@@ -76,8 +76,8 @@ public class Main extends Application {
                         enemies.add(enemy);
                         break;
                     case '3':
-                        playerWidth = 76; playerHeight = 126;
-                        player = createSprite(column*blockSize, row*blockSize-(126/2+4), playerWidth, playerHeight, "sample/resources/img/player.png");
+                        playerWidth = 120; playerHeight = 162;
+                        player = createSprite(column*blockSize, row*blockSize-(175/2+14), playerWidth, playerHeight, "sample/resources/img/player.png");
                         break;
                     case '4':
                         questionColumn = column;
