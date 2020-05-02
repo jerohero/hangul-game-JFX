@@ -77,7 +77,7 @@ public class Main extends Application {
                         break;
                     case '3':
                         playerWidth = 120; playerHeight = 162;
-                        player = createSprite(column*blockSize, row*blockSize-(175/2+14), playerWidth, playerHeight, "sample/resources/img/player.png");
+                        player = createSprite(column*blockSize-(30), row*blockSize-(175/2+14), playerWidth, playerHeight, "sample/resources/img/player.png");
                         break;
                     case '4':
                         questionColumn = column;
