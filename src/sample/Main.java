@@ -99,22 +99,22 @@ public class Main extends Application {
                     case '0':
                         break;
                     case '1':
-                        Answer button1 = new Answer("g", column * blockSize - 23, row * blockSize);
+                        Answer button1 = new Answer("g", column * blockSize - 23, row * blockSize, "left");
                         uiRoot.getChildren().add(button1);
                         buttons.add(button1);
                         break;
                     case '2':
-                        Answer button2 = new Answer("ae", column * blockSize - 20, row * blockSize);
+                        Answer button2 = new Answer("ae", column * blockSize - 20, row * blockSize, "right");
                         uiRoot.getChildren().add(button2);
                         buttons.add(button2);
                         break;
                     case '3':
-                        Answer button3 = new Answer("b", column * blockSize - 23, row * blockSize);
+                        Answer button3 = new Answer("b", column * blockSize - 23, row * blockSize, "left");
                         uiRoot.getChildren().add(button3);
                         buttons.add(button3);
                         break;
                     case '4':
-                        Answer button4 = new Answer("ch", column * blockSize - 20, row * blockSize);
+                        Answer button4 = new Answer("ch", column * blockSize - 20, row * blockSize, "right");
                         uiRoot.getChildren().add(button4);
                         buttons.add(button4);
                         break;
