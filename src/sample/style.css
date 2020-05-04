@@ -1,11 +1,11 @@
 @font-face{
-    font-family: fff-forward;
-    src: url('/fonts/FFFFORWA.TTF');
+    font-family: SF Pixelate;
+    src: url('resources/fonts/SFPixelate.ttf');
 }
 
 .answer{
     -fx-cursor: hand;
-    -fx-font: normal bold 80px 'fff-forward';
+    -fx-font: normal normal 80px 'SF Pixelate';
 }
 
 .questiontxt{

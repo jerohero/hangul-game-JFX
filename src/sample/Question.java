@@ -8,28 +8,25 @@ import javafx.scene.text.Text;
 import java.util.*;
 
 public class Question extends Pane {
-    private Map<String, String> questionAnswer;
+    private Map<String, String> questionAnswer = new HashMap<>();
     private String question;
     private String answer;
     private Text text;
     private String hangul;
     private String romanized;
 
-    public Question(String hangul, String romanized){
+//    public Question(String hangul, String romanized){
+    public Question(){
         Image bubbleImg = new Image("sample/resources/img/textbubble.png");
         ImageView bubble = new ImageView(bubbleImg);
         bubble.setFitWidth(140);
         bubble.setFitHeight(140);
 
-        Map<String, String> questionAnswer = new HashMap<>();
-        questionAnswer.put(hangul, romanized);
-        this.questionAnswer = questionAnswer;
-        Main.addToQuestionsArray(questionAnswer);
+//        questionAnswer.put(hangul, romanized);
+//        Main.addToQuestionsArray(questionAnswer);
 
-        //bij opstarten random lijst maken met vragen
-
-        text = new Text(hangul);
-        answer = questionAnswer.get(hangul);
+        text = new Text();
+//        answer = questionAnswer.get(hangul);
 
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         getStyleClass().add("questiontxt");
@@ -43,12 +40,36 @@ public class Question extends Pane {
         this.setTranslateY(Main.getQuestionRow() * Main.getBlockSize() - 180);
     }
 
+    public void updateQuestion(int currentLevel){
+        String newQuestion = "";
+        String newAnswer;
+
+        Map<String, String> levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
+
+        Random random = new Random();
+        Object[] values = levelQuestions.values().toArray();
+        newAnswer = (String) values[random.nextInt(values.length)];
+        answer = newAnswer;
+
+        for(Map.Entry<String, String> entry : levelQuestions.entrySet()){
+            if(Objects.equals(newAnswer, entry.getValue())){
+                newQuestion = entry.getKey();
+            }
+        }
+        text.setText(newQuestion);
+
+        questionAnswer.put(newQuestion, newAnswer);
+        Main.addToQuestionsArray(questionAnswer);
+    }
+
     public String getCorrectAnswer(){
         return answer;
     }
 
     public boolean isCorrect(String answered){
-        if (answered == answer){
+//        if (true){
+
+        if (answered.equals(answer)){
             return true;
         }
         else{

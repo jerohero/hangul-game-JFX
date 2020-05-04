@@ -9,6 +9,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class Answer extends GridPane {
     private String answer;
@@ -18,16 +19,17 @@ public class Answer extends GridPane {
         this.answer = answer;
         this.side = side;
 
+        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
         Image buttonImg = new Image("sample/resources/img/buttonbubble.png");
         ImageView buttonbubble = new ImageView(buttonImg);
         buttonbubble.setFitWidth(192);
         buttonbubble.setFitHeight(120);
 
         Text text = new Text(answer);
-        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        text.setWrappingWidth(buttonbubble.getFitWidth());
+        text.setTextAlignment(TextAlignment.CENTER);
         getStyleClass().add("answer");
-        text.setTranslateX(80);
-        text.setTranslateY(-7);
 
         this.setTranslateY(y-30);
         if(side == "left"){

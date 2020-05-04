@@ -25,6 +25,9 @@ public class Main extends Application {
     private ArrayList<Answer> buttons = new ArrayList<Answer>();
 
     private static ArrayList<Map> questions = new ArrayList<>();
+    private static Map<String, String> levelQuestions;
+
+    private static ArrayList<Map> allContent;
 
     private Pane appRoot = new Pane();
     private Pane gameRoot = new Pane();
@@ -35,7 +38,7 @@ public class Main extends Application {
     private Point2D playerVelocity = new Point2D(0, 0);
     private boolean canJump = true;
     private Sprite sprite;
-    private Question question;
+    private static Question question;
 
     private int levelWidth;
     private static int blockSize;
@@ -48,11 +51,15 @@ public class Main extends Application {
     private int playerX;
     private int playerY;
 
+    private String correctAnswer;
+
     private boolean dialogEvent = false, running = true;
 
     private int globaltick;
     private static int animationtick;
     private int second;
+
+    private static int currentLevel = 1;
 
     private void initContent() {
         Image bgImg = new Image("sample/resources/img/bg.png");
@@ -82,10 +89,10 @@ public class Main extends Application {
                     case '4':
                         questionColumn = column;
                         questionRow = row;
-                        String hangul = "ㅊ";
-                        String romanized = "ch";
+                        String hangul = "";
+                        String romanized = "";
 
-                        question = new Question(hangul, romanized);
+                        question = new Question();
                         gameRoot.getChildren().add(question);
                         break;
                 }
@@ -126,17 +133,20 @@ public class Main extends Application {
             button.setOnMouseClicked(event -> {
                 if(question.isCorrect(button.getAnswer())){
                     //volgende vraag
-                    answeredCorrectly(question.getCorrectAnswer());
+                    correctAnswer = question.getCorrectAnswer();
+                    answeredCorrectly(correctAnswer);
+
                 }
                 else{
                     //takehit
+                    System.out.println(button.getAnswer());
                 }
             });
         }
 
-        Map<String, String> levelQuestions = QuestionUtils.getQuestions(1);
-
-
+        levelQuestions = QuestionUtils.getQuestions(currentLevel);
+        allContent = QuestionUtils.initializeQuestions();
+        question.updateQuestion(currentLevel);
 
         appRoot.setStyle("-fx-background-color: #e3d7bf");
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
@@ -146,8 +156,10 @@ public class Main extends Application {
         int i = 0;
         for (Map questionAnswer : questions) {
             if(questionAnswer.values().contains(answer)){
-//                questions.remove(i);
                 Sprite.spriteHit(enemy, animationtick, "enemy");
+                question.updateQuestion(currentLevel);
+//                while(questionAnswer.values().remove(answer));
+                System.out.println("Correct");
             }
             i++;
         }
@@ -160,13 +172,13 @@ public class Main extends Application {
         Sprite.spriteIdle(player, animationtick, "player");
         Sprite.spriteIdle(enemy, animationtick, "enemy");
 
-        if (isPressed(KeyCode.A) && player.getTranslateX() >= 5) {
-            movePlayerX(-5);
-        }
-
-        if (isPressed(KeyCode.D) && player.getTranslateX() + 40 <= levelWidth - 5) {
-            movePlayerX(5);
-        }
+//        if (isPressed(KeyCode.A) && player.getTranslateX() >= 5) {
+//            movePlayerX(-5);
+//        }
+//
+//        if (isPressed(KeyCode.D) && player.getTranslateX() + 40 <= levelWidth - 5) {
+//            movePlayerX(5);
+//        }
 
         for (Node enemy : enemies) {
             if (player.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
@@ -185,51 +197,51 @@ public class Main extends Application {
         }
     }
 
-    private void movePlayerX(int value) {
-        boolean movingRight = value > 0;
-
-        for (int i = 0; i < Math.abs(value); i++) {
-            for (Node platform : platforms) {
-                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {       //collision met platform
-                    if (movingRight) {
-                        if (player.getTranslateX() + 40 == platform.getTranslateX()) {             //collides rechts
-                            return;                                                                //kan niet meer bewegen
-                        }
-                    }
-                    else {                                                                      //height player
-                        if (player.getTranslateX() == platform.getTranslateX() + blockSize) {
-                            return;
-                        }
-                    }
-                }
-            }
-            player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
-        }
-    }
-
-    private void movePlayerY(int value) {
-        boolean movingDown = value > 0;
-
-        for (int i = 0; i < Math.abs(value); i++) {
-            for (Node platform : platforms) {
-                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {
-                    if (movingDown) {
-                        if (player.getTranslateY() + 40 == platform.getTranslateY()) {
-                            player.setTranslateY(player.getTranslateY() - 1);
-                            canJump = true;
-                            return;
-                        }
-                    }
-                    else {
-                        if (player.getTranslateY() == platform.getTranslateY() + blockSize) {
-                            return;
-                        }
-                    }
-                }
-            }
-            player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
-        }
-    }
+//    private void movePlayerX(int value) {
+//        boolean movingRight = value > 0;
+//
+//        for (int i = 0; i < Math.abs(value); i++) {
+//            for (Node platform : platforms) {
+//                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {       //collision met platform
+//                    if (movingRight) {
+//                        if (player.getTranslateX() + 40 == platform.getTranslateX()) {             //collides rechts
+//                            return;                                                                //kan niet meer bewegen
+//                        }
+//                    }
+//                    else {                                                                      //height player
+//                        if (player.getTranslateX() == platform.getTranslateX() + blockSize) {
+//                            return;
+//                        }
+//                    }
+//                }
+//            }
+//            player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
+//        }
+//    }
+//
+//    private void movePlayerY(int value) {
+//        boolean movingDown = value > 0;
+//
+//        for (int i = 0; i < Math.abs(value); i++) {
+//            for (Node platform : platforms) {
+//                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {
+//                    if (movingDown) {
+//                        if (player.getTranslateY() + 40 == platform.getTranslateY()) {
+//                            player.setTranslateY(player.getTranslateY() - 1);
+//                            canJump = true;
+//                            return;
+//                        }
+//                    }
+//                    else {
+//                        if (player.getTranslateY() == platform.getTranslateY() + blockSize) {
+//                            return;
+//                        }
+//                    }
+//                }
+//            }
+//            player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
+//        }
+//    }
 
     private ImageView createSprite(int x, int y, int w, int h, String path){
         Sprite spriteObj = new Sprite(x, y, w, h, path);
@@ -280,14 +292,35 @@ public class Main extends Application {
         return questionRow;
     }
 
-    public static ArrayList<Map> getQuestionsArray(){
-        return questions;
-    }
+//    public static ArrayList<Map> getQuestionsArray(){
+//        return questions;
+//    }
     public static void addToQuestionsArray(Map questionAnswer){
         questions.add(questionAnswer);
     }
+//
+//    public static void setQuestionList(ArrayList<Map> newQuestions){
+//        questions = newQuestions;
+//    }
 
     public static void setAnimationTick(int newAnimationtick){
         animationtick = newAnimationtick;
+    }
+
+    public static Map<String, String> getQuestionsArray(){
+        return levelQuestions;
+    }
+
+    public static void setQuestionList(Map<String, String> newQuestions){
+        levelQuestions = newQuestions;
+    }
+
+    public static Question getQuestion(){
+        return question;
+    }
+
+    public static void setQuestion(Question newQuestion){
+        question = newQuestion;
+
     }
 }
