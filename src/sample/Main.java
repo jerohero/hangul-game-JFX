@@ -161,7 +161,7 @@ public class Main extends Application {
                 question.updateQuestion(currentLevel);
                 AnswerUtils.updateAnswers(question.getCorrectAnswer());
 //                while(questionAnswer.values().remove(answer));
-                System.out.println("Correct");
+                System.out.println(questions);
             }
             i++;
         }
@@ -297,8 +297,13 @@ public class Main extends Application {
 //    public static ArrayList<Map> getQuestionsArray(){
 //        return questions;
 //    }
-    public static void addToQuestionsArray(Map questionAnswer){
+    public static void updateAskedQuestions(Map questionAnswer) {
+        questions.clear();
         questions.add(questionAnswer);
+    }
+
+    public static ArrayList<Map> getAskedQuestions(){
+        return questions;
     }
 //
 //    public static void setQuestionList(ArrayList<Map> newQuestions){

@@ -15,6 +15,7 @@ public class Question extends Pane {
     private String hangul;
     private String romanized;
     private static Map<String, String> levelQuestions;
+    private static ArrayList<Map> askedQuestions;
 
     //    public Question(String hangul, String romanized){
     public Question(){
@@ -46,21 +47,35 @@ public class Question extends Pane {
         String newAnswer;
 
         levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
+        askedQuestions = Main.getAskedQuestions();
 
-        Random random = new Random();
-        Object[] values = levelQuestions.values().toArray();
-        newAnswer = (String) values[random.nextInt(values.length)];
-        answer = newAnswer;
+        if(!levelQuestions.isEmpty()){
+            if(levelQuestions.size() <= 1){
+                System.out.println("eee");
+            }
+            else {
+                Random random = new Random();
+                Object[] values = levelQuestions.values().toArray();
+                newAnswer = (String) values[random.nextInt(values.length)];
 
-        for(Map.Entry<String, String> entry : levelQuestions.entrySet()){
-            if(Objects.equals(newAnswer, entry.getValue())){
-                newQuestion = entry.getKey();
+                answer = newAnswer;
+
+                for (Map.Entry<String, String> entry : levelQuestions.entrySet()) {
+                    if (Objects.equals(newAnswer, entry.getValue())) {
+                        newQuestion = entry.getKey();
+                    }
+                }
+                text.setText(newQuestion);
+
+                questionAnswer.put(newQuestion, newAnswer);
+                Main.updateAskedQuestions(questionAnswer);
             }
         }
-        text.setText(newQuestion);
-
-        questionAnswer.put(newQuestion, newAnswer);
-        Main.addToQuestionsArray(questionAnswer);
+//        if(!askedQuestions.isEmpty()){
+//            if(askedQuestions.get(0).containsValue(newAnswer)){
+//                System.out.println("hehehehehhe");
+//            }
+//        }
     }
 
     public String getCorrectAnswer(){

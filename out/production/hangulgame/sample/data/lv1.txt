@@ -10,8 +10,3 @@
 ㅋ:k
 ㅊ:ch
 ㅍ:p
-ㅃ:p/bb
-ㅉ:jj
-ㄸ:dd/t
-ㄲ:k/gg
-ㅆ:ss
