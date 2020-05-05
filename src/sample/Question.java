@@ -49,9 +49,13 @@ public class Question extends Pane {
         levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
         askedQuestions = Main.getAskedQuestions();
 
+        System.out.println(levelQuestions + "eeefgrdehetrd");
+
         if(!levelQuestions.isEmpty()){
-            if(levelQuestions.size() <= 1){
-                System.out.println("eee");
+            if(levelQuestions.size() == 1){
+                newQuestion = levelQuestions.keySet().toString().replace("]", "").replace("[", "");
+                newAnswer = levelQuestions.values().toString().replace("]", "").replace("[", "");
+                answer = newAnswer;
             }
             else {
                 Random random = new Random();
@@ -65,11 +69,11 @@ public class Question extends Pane {
                         newQuestion = entry.getKey();
                     }
                 }
-                text.setText(newQuestion);
 
-                questionAnswer.put(newQuestion, newAnswer);
-                Main.updateAskedQuestions(questionAnswer);
             }
+            text.setText(newQuestion);
+            questionAnswer.put(newQuestion, newAnswer);
+            Main.updateAskedQuestions(questionAnswer);
         }
 //        if(!askedQuestions.isEmpty()){
 //            if(askedQuestions.get(0).containsValue(newAnswer)){
