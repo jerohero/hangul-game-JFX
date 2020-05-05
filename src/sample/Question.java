@@ -46,7 +46,8 @@ public class Question extends Pane {
 
     public void updateQuestion(int currentLevel){
         String newQuestion = "";
-        String newAnswer;
+        String newAnswer = null;
+        Map<String, String> incorrectAnswers = new HashMap<>();
 
         levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
         askedQuestions = Main.getAskedQuestions();
@@ -62,17 +63,31 @@ public class Question extends Pane {
                 answer = newAnswer;
             }
             else {
-                
                 Random random = new Random();
-                Object[] values = questionsLeft.values().toArray();    // levelquestions of questionsleft
-                newAnswer = (String) values[random.nextInt(values.length)];
+                Object[] values = new Object[0];
+                if (resetcounter == 1){
+                    System.out.println("Resetcounter is 1.");
+                    values = questionsLeft.values().toArray();    // levelquestions of questionsleft
+                    newAnswer = (String) values[random.nextInt(values.length)];
+                }
+                else if (resetcounter == 2){
+                    if(!Main.getIncorrectAnswers().isEmpty()){
+                        System.out.println("Resetcounter is now 2.");
+                        incorrectAnswers = Main.getIncorrectAnswers();
+                        values = incorrectAnswers.values().toArray();
+                        newAnswer = (String) values[random.nextInt(values.length)];
+                    }
+                }
 
                 answer = newAnswer;
 
-                for (Map.Entry<String, String> entry : questionsLeft.entrySet()) {
-                    if (Objects.equals(newAnswer, entry.getValue())) {
-                        newQuestion = entry.getKey();
-                    }
+                if (resetcounter == 1){
+                    newQuestion = Utilities.getKeyByValue(questionsLeft, newAnswer);
+                }
+                else if (resetcounter == 2){
+                    newQuestion = Utilities.getKeyByValue(Main.getIncorrectAnswers(), newAnswer);
+                    incorrectAnswers.remove(newQuestion);
+                    Main.setIncorrectAnswers(incorrectAnswers);
                 }
 
             }

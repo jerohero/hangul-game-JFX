@@ -16,6 +16,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import javax.rmi.CORBA.Util;
+
 public class Main extends Application {
 
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
@@ -26,6 +28,7 @@ public class Main extends Application {
 
     private static ArrayList<Map> questions = new ArrayList<>();
     private static Map<String, String> levelQuestions;
+    private static Map<String, String> incorrectAnswers = new HashMap<>();
 
     private static ArrayList<Map> allContent;
 
@@ -131,15 +134,15 @@ public class Main extends Application {
 
         for (Answer button : buttons){
             button.setOnMouseClicked(event -> {
+                System.out.println(button.getAnswer());
                 if(question.isCorrect(button.getAnswer())){
                     //volgende vraag
-                    correctAnswer = question.getCorrectAnswer();
-                    answeredCorrectly(correctAnswer);
+                    answeredCorrectly();
 
                 }
                 else{
                     //takehit
-                    System.out.println(button.getAnswer());
+                    answeredIncorrectly();
                 }
             });
         }
@@ -147,25 +150,40 @@ public class Main extends Application {
         levelQuestions = QuestionUtils.getQuestions(currentLevel);
         allContent = QuestionUtils.initializeQuestions();
         question.updateQuestion(currentLevel);
-        AnswerUtils.updateAnswers(question.getCorrectAnswer());
+        Answer.updateAnswers(question.getCorrectAnswer());
 
         appRoot.setStyle("-fx-background-color: #e3d7bf");
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
 
-    private void answeredCorrectly(String answer){
+    private void answeredCorrectly(){
         int i = 0;
         for (Map questionAnswer : questions) {
-            if(questionAnswer.values().contains(answer)){
+            if(questionAnswer.values().contains(question.getCorrectAnswer())){
                 Sprite.spriteHit(enemy, animationtick, "enemy");
                 question.updateQuestion(currentLevel);
-                AnswerUtils.updateAnswers(question.getCorrectAnswer());
+                Answer.updateAnswers(question.getCorrectAnswer());
 //                while(questionAnswer.values().remove(answer));
-                System.out.println(questions);
+                System.out.println("Answered:" + questions);
             }
             i++;
         }
     }
+
+    private void answeredIncorrectly(){
+        //take damage > give enemy health
+        //damage animation
+        //add to incorrectly answered list
+        correctAnswer = question.getCorrectAnswer();
+        String hangul = Utilities.getKeyByValue(levelQuestions, correctAnswer);
+        incorrectAnswers.put(hangul, question.getCorrectAnswer());
+        System.out.println("All incorrect answered: " + incorrectAnswers);
+    }
+
+//    useless code that gets the clicked answer's map stuff
+//    String hangul = Utilities.getKeyByValue(levelQuestions, answerGiven);
+//        incorrectAnswers.put(hangul, answerGiven);
+//        System.out.println(hangul + "  " + answerGiven);
 
     private void update() {
         globaltick++;
@@ -332,5 +350,13 @@ public class Main extends Application {
 
     public static ArrayList<Answer> getButtons(){
         return buttons;
+    }
+
+    public static Map<String, String> getIncorrectAnswers(){
+        return incorrectAnswers;
+    }
+
+    public static void setIncorrectAnswers(Map<String, String> newIncorrectAnswers){
+        incorrectAnswers = newIncorrectAnswers;
     }
 }
