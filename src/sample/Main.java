@@ -22,7 +22,7 @@ public class Main extends Application {
 
     private ArrayList<Node> platforms = new ArrayList<Node>();
     private ArrayList<Node> enemies = new ArrayList<Node>();
-    private ArrayList<Answer> buttons = new ArrayList<Answer>();
+    private static ArrayList<Answer> buttons = new ArrayList<Answer>();
 
     private static ArrayList<Map> questions = new ArrayList<>();
     private static Map<String, String> levelQuestions;
@@ -147,6 +147,7 @@ public class Main extends Application {
         levelQuestions = QuestionUtils.getQuestions(currentLevel);
         allContent = QuestionUtils.initializeQuestions();
         question.updateQuestion(currentLevel);
+        AnswerUtils.updateAnswers(question.getCorrectAnswer());
 
         appRoot.setStyle("-fx-background-color: #e3d7bf");
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
@@ -158,6 +159,7 @@ public class Main extends Application {
             if(questionAnswer.values().contains(answer)){
                 Sprite.spriteHit(enemy, animationtick, "enemy");
                 question.updateQuestion(currentLevel);
+                AnswerUtils.updateAnswers(question.getCorrectAnswer());
 //                while(questionAnswer.values().remove(answer));
                 System.out.println("Correct");
             }
@@ -321,6 +323,9 @@ public class Main extends Application {
 
     public static void setQuestion(Question newQuestion){
         question = newQuestion;
+    }
 
+    public static ArrayList<Answer> getButtons(){
+        return buttons;
     }
 }

@@ -14,6 +14,7 @@ import javafx.scene.text.TextAlignment;
 public class Answer extends GridPane {
     private String answer;
     private String side;
+    private Text text;
 
     public Answer(String answer, int x, int y, String side){
         this.answer = answer;
@@ -26,7 +27,7 @@ public class Answer extends GridPane {
         buttonbubble.setFitWidth(192);
         buttonbubble.setFitHeight(120);
 
-        Text text = new Text(answer);
+        text = new Text(answer);
         text.setWrappingWidth(buttonbubble.getFitWidth());
         text.setTextAlignment(TextAlignment.CENTER);
         getStyleClass().add("answer");
@@ -45,5 +46,16 @@ public class Answer extends GridPane {
 
     public String getAnswer(){
         return answer;
+    }
+
+    public void setAnswer(String answer){
+        this.answer = answer;
+        if(answer.length() >= 4){
+            text.setStyle("-fx-font: 60 'SF Pixelate';");
+        }
+        else{
+            text.setStyle("-fx-font: 80 'SF Pixelate';");
+        }
+        text.setText(answer);
     }
 }

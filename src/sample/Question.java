@@ -14,8 +14,9 @@ public class Question extends Pane {
     private Text text;
     private String hangul;
     private String romanized;
+    private static Map<String, String> levelQuestions;
 
-//    public Question(String hangul, String romanized){
+    //    public Question(String hangul, String romanized){
     public Question(){
         Image bubbleImg = new Image("sample/resources/img/textbubble.png");
         ImageView bubble = new ImageView(bubbleImg);
@@ -44,7 +45,7 @@ public class Question extends Pane {
         String newQuestion = "";
         String newAnswer;
 
-        Map<String, String> levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
+        levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
 
         Random random = new Random();
         Object[] values = levelQuestions.values().toArray();
@@ -75,5 +76,9 @@ public class Question extends Pane {
         else{
             return false;
         }
+    }
+
+    public static Map<String,String> getLevelQuestions(){
+        return levelQuestions;
     }
 }

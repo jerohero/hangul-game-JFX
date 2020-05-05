@@ -12,6 +12,6 @@
 ㅍ:p
 ㅃ:p/bb
 ㅉ:jj
-ㄸ:t
+ㄸ:dd/t
 ㄲ:k/gg
 ㅆ:ss
