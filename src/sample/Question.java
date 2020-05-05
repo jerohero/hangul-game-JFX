@@ -16,6 +16,8 @@ public class Question extends Pane {
     private String romanized;
     private static Map<String, String> levelQuestions;
     private static ArrayList<Map> askedQuestions;
+    private static Map<String, String> questionsLeft = new HashMap<>();
+    private static int resetcounter;
 
     //    public Question(String hangul, String romanized){
     public Question(){
@@ -48,8 +50,10 @@ public class Question extends Pane {
 
         levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
         askedQuestions = Main.getAskedQuestions();
-
-        System.out.println(levelQuestions + "eeefgrdehetrd");
+        if(questionsLeft.isEmpty()){
+            questionsLeft.putAll(levelQuestions);
+            resetcounter++;
+        }
 
         if(!levelQuestions.isEmpty()){
             if(levelQuestions.size() == 1){
@@ -58,13 +62,14 @@ public class Question extends Pane {
                 answer = newAnswer;
             }
             else {
+                
                 Random random = new Random();
-                Object[] values = levelQuestions.values().toArray();
+                Object[] values = questionsLeft.values().toArray();    // levelquestions of questionsleft
                 newAnswer = (String) values[random.nextInt(values.length)];
 
                 answer = newAnswer;
 
-                for (Map.Entry<String, String> entry : levelQuestions.entrySet()) {
+                for (Map.Entry<String, String> entry : questionsLeft.entrySet()) {
                     if (Objects.equals(newAnswer, entry.getValue())) {
                         newQuestion = entry.getKey();
                     }
@@ -80,6 +85,10 @@ public class Question extends Pane {
 //                System.out.println("hehehehehhe");
 //            }
 //        }
+
+        while(questionsLeft.values().remove(answer));
+
+        System.out.println("questions left: " + questionsLeft);
     }
 
     public String getCorrectAnswer(){
@@ -100,4 +109,14 @@ public class Question extends Pane {
     public static Map<String,String> getLevelQuestions(){
         return levelQuestions;
     }
+
+    public static Map<String, String> getQuestionsLeft(){
+        return questionsLeft;
+    }
+
+    public static void setQuestionsLeft(Map<String, String> newQuestionsLeft){
+        questionsLeft = newQuestionsLeft;
+    }
+
+
 }
