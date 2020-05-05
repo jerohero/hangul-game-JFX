@@ -57,49 +57,43 @@ public class Question extends Pane {
         }
 
         if(!levelQuestions.isEmpty()){
-            if(levelQuestions.size() == 1){
-                newQuestion = levelQuestions.keySet().toString().replace("]", "").replace("[", "");
-                newAnswer = levelQuestions.values().toString().replace("]", "").replace("[", "");
+//            if(levelQuestions.size() == 1){
+//                newQuestion = levelQuestions.keySet().toString().replace("]", "").replace("[", "");
+//                newAnswer = levelQuestions.values().toString().replace("]", "").replace("[", "");
+//                answer = newAnswer;
+//            }
+//            else {
+            Random random = new Random();
+            Object[] values;
+            if (resetcounter == 1){
+                System.out.println("Resetcounter is 1.");
+                values = questionsLeft.values().toArray();    // levelquestions of questionsleft
+                newAnswer = (String) values[random.nextInt(values.length)];
                 answer = newAnswer;
+                newQuestion = Utilities.getKeyByValue(questionsLeft, newAnswer);
             }
-            else {
-                Random random = new Random();
-                Object[] values = new Object[0];
-                if (resetcounter == 1){
-                    System.out.println("Resetcounter is 1.");
-                    values = questionsLeft.values().toArray();    // levelquestions of questionsleft
+            else if (resetcounter == 2){
+                if(!Main.getIncorrectAnswers().isEmpty()){
+                    System.out.println("Resetcounter is now 2.");
+                    incorrectAnswers = Main.getIncorrectAnswers();
+                    values = incorrectAnswers.values().toArray();
                     newAnswer = (String) values[random.nextInt(values.length)];
-                }
-                else if (resetcounter == 2){
-                    if(!Main.getIncorrectAnswers().isEmpty()){
-                        System.out.println("Resetcounter is now 2.");
-                        incorrectAnswers = Main.getIncorrectAnswers();
-                        values = incorrectAnswers.values().toArray();
-                        newAnswer = (String) values[random.nextInt(values.length)];
-                    }
-                }
-
-                answer = newAnswer;
-
-                if (resetcounter == 1){
-                    newQuestion = Utilities.getKeyByValue(questionsLeft, newAnswer);
-                }
-                else if (resetcounter == 2){
+                    answer = newAnswer;
                     newQuestion = Utilities.getKeyByValue(Main.getIncorrectAnswers(), newAnswer);
                     incorrectAnswers.remove(newQuestion);
                     Main.setIncorrectAnswers(incorrectAnswers);
                 }
-
+                else{
+                    resetcounter--;
+                    this.updateQuestion(currentLevel);
+                    return;
+                }
             }
+//            }
             text.setText(newQuestion);
             questionAnswer.put(newQuestion, newAnswer);
             Main.updateAskedQuestions(questionAnswer);
         }
-//        if(!askedQuestions.isEmpty()){
-//            if(askedQuestions.get(0).containsValue(newAnswer)){
-//                System.out.println("hehehehehhe");
-//            }
-//        }
 
         while(questionsLeft.values().remove(answer));
 
