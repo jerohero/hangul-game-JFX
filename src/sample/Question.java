@@ -21,7 +21,7 @@ public class Question extends Pane {
 
     //    public Question(String hangul, String romanized){
     public Question(){
-        Image bubbleImg = new Image("sample/resources/img/textbubble.png");
+        Image bubbleImg = new Image("sample/resources/img/textbubble0.png");
         ImageView bubble = new ImageView(bubbleImg);
         bubble.setFitWidth(140);
         bubble.setFitHeight(140);
@@ -40,8 +40,8 @@ public class Question extends Pane {
         this.getChildren().add(bubble);
         this.getChildren().add(text);
 
-        this.setTranslateX(Main.getQuestionColumn() * Main.getBlockSize());
-        this.setTranslateY(Main.getQuestionRow() * Main.getBlockSize() - 180);
+        this.setTranslateX(Main.getQuestionColumn() * Main.getBlockSize() - 12);
+        this.setTranslateY(Main.getQuestionRow() * Main.getBlockSize() - 170);
     }
 
     public void updateQuestion(int currentLevel){

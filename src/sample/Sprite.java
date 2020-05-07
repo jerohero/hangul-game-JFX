@@ -14,6 +14,8 @@ public class Sprite {
     private static int tick;
     private static AnimationTimer timer;
 
+    private static boolean animationIsActive = false;
+
     ImageView sprite;
 
     public Sprite(int x, int y, int w, int h, String path) {
@@ -72,31 +74,27 @@ public class Sprite {
 
     public static void enemyTalk(ImageView sprite, int animationtick){
         Main.pauseIdleEnemy();
-        timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                tick++;
-                if(tick % 10 == 0){
-                    changeSpriteImg(sprite, "sample/resources/img/enemy1-talk.png");
+        if(!animationIsActive){
+            timer = new AnimationTimer() {
+                @Override
+                public void handle(long now) {
+                    tick++;
+                    animationIsActive = true;
+                    if(tick % 10 == 0){
+                        changeSpriteImg(sprite, "sample/resources/img/enemy1-talk.png");
+                    }
+                    if(tick % 20 == 0){
+                        changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
+                    }
+                    if(tick > 60){
+                        timer.stop();
+                        Main.unpauseIdleEnemy();
+                        tick = 0;
+                        animationIsActive = false;
+                    }
                 }
-                if(tick % 20 == 0){
-                    changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
-                }
-                if(tick > 60){
-                    timer.stop();
-                    Main.unpauseIdleEnemy();
-                    tick = 0;
-                }
-            }
-        };
-        timer.start();
-//        for (int i = 0; i < 20 ; i++) {
-//            if(animationtick % 30 == 0){
-//                changeSpriteImg(sprite, "sample/resources/img/enemy1-talk.png");
-//            }
-//            if(animationtick % 60 == 0){
-//                changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
-//            }
-//        }
+            };
+            timer.start();
+        }
     }
 }

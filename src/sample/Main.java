@@ -64,8 +64,9 @@ public class Main extends Application {
 
     private static boolean enemyIdlePaused = false;
 
+    private Background background = new Background();
+
     private void initContent() {
-        Background background = new Background();
         ImageView bg = background.getBackground();
 
         blockSize = 60;
@@ -163,6 +164,7 @@ public class Main extends Application {
                 Sprite.enemyTalk(enemy, animationtick);
                 question.updateQuestion(currentLevel);
                 Answer.updateAnswers(question.getCorrectAnswer());
+                background.fountainAnimation();
 //                while(questionAnswer.values().remove(answer));
                 System.out.println("Answered:" + questions);
                 for (int j = 0; j < 4 ; j++) {
