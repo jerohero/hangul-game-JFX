@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -9,6 +10,9 @@ public class Sprite {
     private int x;
     private int y;
     private String path;
+
+    private static int tick;
+    private static AnimationTimer timer;
 
     ImageView sprite;
 
@@ -64,5 +68,35 @@ public class Sprite {
         if(type == "enemy"){
             changeSpriteImg(sprite, "sample/resources/img/enemy1-hit.png");
         }
+    }
+
+    public static void enemyTalk(ImageView sprite, int animationtick){
+        Main.pauseIdleEnemy();
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                tick++;
+                if(tick % 10 == 0){
+                    changeSpriteImg(sprite, "sample/resources/img/enemy1-talk.png");
+                }
+                if(tick % 20 == 0){
+                    changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
+                }
+                if(tick > 60){
+                    timer.stop();
+                    Main.unpauseIdleEnemy();
+                    tick = 0;
+                }
+            }
+        };
+        timer.start();
+//        for (int i = 0; i < 20 ; i++) {
+//            if(animationtick % 30 == 0){
+//                changeSpriteImg(sprite, "sample/resources/img/enemy1-talk.png");
+//            }
+//            if(animationtick % 60 == 0){
+//                changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
+//            }
+//        }
     }
 }

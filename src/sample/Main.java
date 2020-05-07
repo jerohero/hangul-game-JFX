@@ -16,8 +16,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import javax.rmi.CORBA.Util;
-
 public class Main extends Application {
 
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
@@ -64,9 +62,11 @@ public class Main extends Application {
 
     private static int currentLevel = 1;
 
+    private static boolean enemyIdlePaused = false;
+
     private void initContent() {
-        Image bgImg = new Image("sample/resources/img/bg.png");
-        ImageView bg = new ImageView(bgImg);
+        Background background = new Background();
+        ImageView bg = background.getBackground();
 
         blockSize = 60;
         levelWidth = LevelData.LEVEL1[0].length() * blockSize;
@@ -142,7 +142,7 @@ public class Main extends Application {
                 }
                 else{
                     //takehit
-                    answeredIncorrectly();
+                    answeredIncorrectly(button);
                 }
             });
         }
@@ -160,23 +160,28 @@ public class Main extends Application {
         int i = 0;
         for (Map questionAnswer : questions) {
             if(questionAnswer.values().contains(question.getCorrectAnswer())){
-                Sprite.spriteHit(enemy, animationtick, "enemy");
+                Sprite.enemyTalk(enemy, animationtick);
                 question.updateQuestion(currentLevel);
                 Answer.updateAnswers(question.getCorrectAnswer());
 //                while(questionAnswer.values().remove(answer));
                 System.out.println("Answered:" + questions);
+                for (int j = 0; j < 4 ; j++) {
+                    buttons.get(j).setButtonToWhite();
+                }
             }
             i++;
         }
     }
 
-    private void answeredIncorrectly(){
+    private void answeredIncorrectly(Answer button){
         //take damage > give enemy health
         //damage animation
         //add to incorrectly answered list
+        Sprite.spriteHit(enemy, animationtick, "enemy");
         correctAnswer = question.getCorrectAnswer();
         String hangul = Utilities.getKeyByValue(levelQuestions, correctAnswer);
         incorrectAnswers.put(hangul, question.getCorrectAnswer());
+        button.setButtonToRed();
         System.out.println("All incorrect answered: " + incorrectAnswers);
     }
 
@@ -190,7 +195,7 @@ public class Main extends Application {
         animationtick++;
 
         Sprite.spriteIdle(player, animationtick, "player");
-        Sprite.spriteIdle(enemy, animationtick, "enemy");
+        if(!enemyIdlePaused) Sprite.spriteIdle(enemy, animationtick, "enemy");
 
 //        if (isPressed(KeyCode.A) && player.getTranslateX() >= 5) {
 //            movePlayerX(-5);
@@ -204,7 +209,7 @@ public class Main extends Application {
             if (player.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
                 enemy.getProperties().put("alive", false);
                 dialogEvent = true;
-                running = false;
+                running = false;   //redundant
             }
         }
 
@@ -332,6 +337,10 @@ public class Main extends Application {
         animationtick = newAnimationtick;
     }
 
+    public static int getAnimationTick(){
+        return animationtick;
+    }
+
     public static Map<String, String> getQuestionsArray(){
         return levelQuestions;
     }
@@ -350,6 +359,14 @@ public class Main extends Application {
 
     public static ArrayList<Answer> getButtons(){
         return buttons;
+    }
+
+    public static void pauseIdleEnemy(){
+        enemyIdlePaused = true;
+    }
+
+    public static void unpauseIdleEnemy(){
+        enemyIdlePaused = false;
     }
 
     public static Map<String, String> getIncorrectAnswers(){
