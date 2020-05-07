@@ -9,14 +9,17 @@ public class QuestionUtils {
     private static Map<String, String> questionAnswer = new HashMap<String, String>();
     private static String path;
     private static ArrayList<Map> allLevels;
+    private static BufferedReader bufReader;
 
     public static Map<String, String> getQuestions(int currentLevel) {
         if(currentLevel == 1){path = "src/sample/data/lv1.txt";}
-        if(currentLevel == 2){path = "src/sample/data/lv2.txt";}
+        else if(currentLevel == 2){path = "src/sample/data/lv2.txt";}
+
 
         try {
-            BufferedReader bufReader = new BufferedReader(new FileReader(new File(path)));
+            bufReader = new BufferedReader(new FileReader(new File(path)));
             String row = bufReader.readLine();
+            questionAnswer.clear(); 
             while(row != null){
                 String hangul = row.split(":")[0];
                 String romanized = row.split(":")[1];
@@ -42,6 +45,7 @@ public class QuestionUtils {
 
         Map<String, String> level2questions = QuestionUtils.getQuestions(2);
         level2questions = shuffleQuestions(level2questions);
+        System.out.println("Level2questions: " + level2questions );
 
         allLevels = new ArrayList<>();
         allLevels.add(level1questions);

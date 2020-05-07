@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
+import javax.crypto.spec.PSource;
 import java.util.*;
 
 public class Question extends Pane {
@@ -50,6 +51,8 @@ public class Question extends Pane {
         Map<String, String> incorrectAnswers = new HashMap<>();
 
         levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
+        System.out.println("Question - getAllLevels: " + QuestionUtils.getAllLevels().get(currentLevel-1));
+//        System.out.println(levelQuestions);
         askedQuestions = Main.getAskedQuestions();
         if(questionsLeft.isEmpty()){
             questionsLeft.putAll(levelQuestions);
@@ -66,7 +69,7 @@ public class Question extends Pane {
             Random random = new Random();
             Object[] values;
             if (resetcounter == 1){
-                System.out.println("Resetcounter is 1.");
+                System.out.println("Phase 1: All questions");
                 values = questionsLeft.values().toArray();    // levelquestions of questionsleft
                 newAnswer = (String) values[random.nextInt(values.length)];
                 answer = newAnswer;
@@ -74,7 +77,7 @@ public class Question extends Pane {
             }
             else if (resetcounter == 2){
                 if(!Main.getIncorrectAnswers().isEmpty()){
-                    System.out.println("Resetcounter is now 2.");
+                    System.out.println("Phase 2: Incorrect answers");
                     incorrectAnswers = Main.getIncorrectAnswers();
                     values = incorrectAnswers.values().toArray();
                     newAnswer = (String) values[random.nextInt(values.length)];

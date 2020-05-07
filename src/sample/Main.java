@@ -10,7 +10,6 @@ import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -60,7 +59,9 @@ public class Main extends Application {
     private static int animationtick;
     private int second;
 
-    private static int currentLevel = 1;
+    private static int currentLevel = 0;
+//    private static int currentLevel = 2;
+
 
     private static boolean enemyIdlePaused = false;
 
@@ -70,10 +71,10 @@ public class Main extends Application {
         ImageView bg = background.getBackground();
 
         blockSize = 60;
-        levelWidth = LevelData.LEVEL1[0].length() * blockSize;
+        levelWidth = GameLayout.GAME[0].length() * blockSize;
 
-        for (int row = 0; row < LevelData.LEVEL1.length; row++) {
-            String line = LevelData.LEVEL1[row];
+        for (int row = 0; row < GameLayout.GAME.length; row++) {
+            String line = GameLayout.GAME[row];
             for (int column = 0; column < line.length(); column++) {
                 switch (line.charAt(column)) {
                     case '0':
@@ -148,10 +149,9 @@ public class Main extends Application {
             });
         }
 
-        levelQuestions = QuestionUtils.getQuestions(currentLevel);
         allContent = QuestionUtils.initializeQuestions();
-        question.updateQuestion(currentLevel);
-        Answer.updateAnswers(question.getCorrectAnswer());
+        nextStage();
+
 
         appRoot.setStyle("-fx-background-color: #e3d7bf");
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
@@ -185,12 +185,15 @@ public class Main extends Application {
         incorrectAnswers.put(hangul, question.getCorrectAnswer());
         button.setButtonToRed();
         System.out.println("All incorrect answered: " + incorrectAnswers);
+        if(currentLevel == 1)nextStage();
     }
 
-//    useless code that gets the clicked answer's map stuff
-//    String hangul = Utilities.getKeyByValue(levelQuestions, answerGiven);
-//        incorrectAnswers.put(hangul, answerGiven);
-//        System.out.println(hangul + "  " + answerGiven);
+    private void nextStage(){
+        currentLevel++;
+        levelQuestions = QuestionUtils.getQuestions(currentLevel);
+        question.updateQuestion(currentLevel);
+        Answer.updateAnswers(question.getCorrectAnswer());
+    }
 
     private void update() {
         globaltick++;
@@ -342,6 +345,8 @@ public class Main extends Application {
     public static int getAnimationTick(){
         return animationtick;
     }
+
+    public static int getCurrentLevel(){return currentLevel;}
 
     public static Map<String, String> getQuestionsArray(){
         return levelQuestions;

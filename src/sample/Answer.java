@@ -61,6 +61,7 @@ public class Answer extends GridPane {
 
     public static void updateAnswers(String correctAnswer){
         allQuestions = Question.getLevelQuestions();
+        System.out.println("All questions (Answer): " + allQuestions);
 
         buttons = Main.getButtons();
 
@@ -68,10 +69,11 @@ public class Answer extends GridPane {
         buttons.get(randomNum).setAnswer(correctAnswer);
 
         ArrayList<String> newAnswerList = new ArrayList<>();
+
+        Random random = new Random();
+        Object[] values = allQuestions.values().toArray();   //vervangen met questionsleft?
         for (int i = 0; i < 4; i++) {
             if(i != randomNum){
-                Random random = new Random();
-                Object[] values = allQuestions.values().toArray();   //vervangen met questionsleft
                 String newAnswer = (String) values[random.nextInt(values.length)];
                 if(newAnswerList.contains(newAnswer) || newAnswer == correctAnswer){
                     i--; }
