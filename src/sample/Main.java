@@ -62,6 +62,8 @@ public class Main extends Application {
     private static int currentLevel = 0;
 //    private static int currentLevel = 2;
 
+    private static Score score;
+    private static int playerScore;
 
     private static boolean enemyIdlePaused = false;
 
@@ -130,6 +132,10 @@ public class Main extends Application {
                         uiRoot.getChildren().add(button4);
                         buttons.add(button4);
                         break;
+                    case '5':
+                        score = new Score(column * blockSize, row * blockSize);
+                        uiRoot.getChildren().add(score);
+                        break;
                 }
             }
         }
@@ -140,7 +146,6 @@ public class Main extends Application {
                 if(question.isCorrect(button.getAnswer())){
                     //volgende vraag
                     answeredCorrectly();
-
                 }
                 else{
                     //takehit
@@ -148,10 +153,8 @@ public class Main extends Application {
                 }
             });
         }
-
         allContent = QuestionUtils.initializeQuestions();
         nextStage();
-
 
         appRoot.setStyle("-fx-background-color: #e3d7bf");
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
@@ -161,6 +164,9 @@ public class Main extends Application {
         int i = 0;
         for (Map questionAnswer : questions) {
             if(questionAnswer.values().contains(question.getCorrectAnswer())){
+                playerScore++;
+                score.setPlayerScore(playerScore);
+                System.out.println(playerScore);
                 Sprite.enemyTalk(enemy, animationtick);
                 question.updateQuestion(currentLevel);
                 Answer.updateAnswers(question.getCorrectAnswer());
@@ -179,20 +185,24 @@ public class Main extends Application {
         //take damage > give enemy health
         //damage animation
         //add to incorrectly answered list
+        playerScore--;
+        score.setPlayerScore(playerScore);
         Sprite.spriteHit(enemy, animationtick, "enemy");
         correctAnswer = question.getCorrectAnswer();
         String hangul = Utilities.getKeyByValue(levelQuestions, correctAnswer);
         incorrectAnswers.put(hangul, question.getCorrectAnswer());
         button.setButtonToRed();
         System.out.println("All incorrect answered: " + incorrectAnswers);
-        if(currentLevel == 1)nextStage();
     }
 
-    private void nextStage(){
+    public static void nextStage(){
         currentLevel++;
+        Question.resetResetCounter();
+        Question.clearQuestionsLeft();
         levelQuestions = QuestionUtils.getQuestions(currentLevel);
         question.updateQuestion(currentLevel);
         Answer.updateAnswers(question.getCorrectAnswer());
+        score.setMaxScore(levelQuestions.size());
     }
 
     private void update() {
@@ -382,5 +392,9 @@ public class Main extends Application {
 
     public static void setIncorrectAnswers(Map<String, String> newIncorrectAnswers){
         incorrectAnswers = newIncorrectAnswers;
+    }
+
+    public static void setPlayerScore(int newPlayerScore){
+        playerScore = newPlayerScore;
     }
 }

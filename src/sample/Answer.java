@@ -61,7 +61,6 @@ public class Answer extends GridPane {
 
     public static void updateAnswers(String correctAnswer){
         allQuestions = Question.getLevelQuestions();
-        System.out.println("All questions (Answer): " + allQuestions);
 
         buttons = Main.getButtons();
 
@@ -98,7 +97,7 @@ public class Answer extends GridPane {
             @Override
             public void handle(long now) {
                 tick++;
-                if(tick >= 60){
+                if(tick >= 20){
                     buttonbubble.setImage(buttonImg);
                     tick = 0;
                     timer.stop();

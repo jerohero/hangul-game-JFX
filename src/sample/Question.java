@@ -51,7 +51,6 @@ public class Question extends Pane {
         Map<String, String> incorrectAnswers = new HashMap<>();
 
         levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
-        System.out.println("Question - getAllLevels: " + QuestionUtils.getAllLevels().get(currentLevel-1));
 //        System.out.println(levelQuestions);
         askedQuestions = Main.getAskedQuestions();
         if(questionsLeft.isEmpty()){
@@ -81,13 +80,15 @@ public class Question extends Pane {
                     incorrectAnswers = Main.getIncorrectAnswers();
                     values = incorrectAnswers.values().toArray();
                     newAnswer = (String) values[random.nextInt(values.length)];
+
                     answer = newAnswer;
                     newQuestion = Utilities.getKeyByValue(Main.getIncorrectAnswers(), newAnswer);
                     incorrectAnswers.remove(newQuestion);
+
                     Main.setIncorrectAnswers(incorrectAnswers);
                 }
                 else{
-                    resetcounter--;
+                    resetcounter = 1;
                     this.updateQuestion(currentLevel);
                     return;
                 }
@@ -100,7 +101,7 @@ public class Question extends Pane {
 
         while(questionsLeft.values().remove(answer));
 
-        System.out.println("questions left: " + questionsLeft);
+        System.out.println("Questions left: " + questionsLeft);
     }
 
     public String getCorrectAnswer(){
@@ -128,6 +129,14 @@ public class Question extends Pane {
 
     public static void setQuestionsLeft(Map<String, String> newQuestionsLeft){
         questionsLeft = newQuestionsLeft;
+    }
+
+    public static void clearQuestionsLeft(){
+        questionsLeft.clear();
+    }
+
+    public static void resetResetCounter(){
+        resetcounter = 1;
     }
 
 
