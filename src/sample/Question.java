@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -19,6 +20,9 @@ public class Question extends Pane {
     private static ArrayList<Map> askedQuestions;
     private static Map<String, String> questionsLeft = new HashMap<>();
     private static int resetcounter;
+
+    private AnimationTimer timer;
+    private int tick;
 
     //    public Question(String hangul, String romanized){
     public Question(){
@@ -102,6 +106,23 @@ public class Question extends Pane {
         while(questionsLeft.values().remove(answer));
 
         System.out.println("Questions left: " + questionsLeft);
+    }
+
+    public void hideBriefly(){
+        this.setVisible(false);
+        Question questionObject = this;
+
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                tick++;
+                if(tick == 120) {
+                    questionObject.setVisible(true);
+                    tick = 0; timer.stop();
+                }
+            }
+        };
+        timer.start();
     }
 
     public String getCorrectAnswer(){

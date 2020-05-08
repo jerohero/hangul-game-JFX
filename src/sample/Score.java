@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -21,25 +22,27 @@ public class Score extends Pane {
         maxScore = 10;
         scoreBarWidth = 300;
 
-        Rectangle scoreBar = new Rectangle(scoreBarWidth, 30);
-        scoreBar.setFill(Color.WHITE);
-        scoreBar.setStroke(Color.BLACK);
-        scoreBar.setStrokeWidth(2);
-        scoreBar.setArcHeight(5);
-        scoreBar.setArcWidth(5);
+//        Rectangle scoreBar = new Rectangle(scoreBarWidth, 30);
+        ImageView scoreBar = new ImageView("sample/resources/img/scorebar.png");
+//        scoreBar.setFill(Color.WHITE);
+//        scoreBar.setStroke(Color.BLACK);
+//        scoreBar.setStrokeWidth(2);
+//        scoreBar.setArcHeight(5);
+//        scoreBar.setArcWidth(5);
 
-        scoreProgress = new Rectangle(0, 30);
+        scoreProgress = new Rectangle(0, 22);
+        scoreProgress.setX(8);
+        scoreProgress.setY(8);
+        scoreProgress.setFill(Color.LIMEGREEN);
 
         maxScoreToWidth = scoreBarWidth / maxScore;
         playerScoreToWidth = playerScore * maxScoreToWidth;
 
-//        scoreProgress.setWidth(setPlayerScore());
-
 
         this.getChildren().add(scoreBar);
         this.getChildren().add(scoreProgress);
-        this.setLayoutX(x-20);
-        this.setLayoutY(y+8);
+        this.setLayoutX(x-24);
+        this.setLayoutY(y+4);
     }
 
 

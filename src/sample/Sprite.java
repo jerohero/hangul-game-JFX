@@ -12,9 +12,12 @@ public class Sprite {
     private String path;
 
     private static int tick;
-    private static AnimationTimer timer;
+    private static AnimationTimer walkTimer;
+    private static AnimationTimer talkTimer;
 
     private static boolean animationIsActive = false;
+    private static int distancemoved;
+    private static int movetick;
 
     ImageView sprite;
 
@@ -25,6 +28,8 @@ public class Sprite {
         this.h = h;
         this.path = path;
     }
+
+    
 
     public ImageView createSprite(){
         Image img = new Image(path);
@@ -75,7 +80,7 @@ public class Sprite {
     public static void enemyTalk(ImageView sprite, int animationtick){
         Main.pauseIdleEnemy();
         if(!animationIsActive){
-            timer = new AnimationTimer() {
+            talkTimer = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
                     tick++;
@@ -87,14 +92,75 @@ public class Sprite {
                         changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
                     }
                     if(tick > 60){
-                        timer.stop();
+                        talkTimer.stop();
                         Main.unpauseIdleEnemy();
                         tick = 0;
                         animationIsActive = false;
                     }
                 }
             };
-            timer.start();
+            talkTimer.start();
         }
     }
+
+    public static void moveInNewEnemy(){
+        walkTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                movetick++;
+
+                if(movetick == 40){
+
+                }
+            }
+        };
+
+    }
+
+    public static void moveSpriteAway(ImageView sprite) {
+        boolean spriteOnRight =  sprite.getX() > Main.getGameWidth()/2 ? true : false;
+
+        talkTimer.stop();
+        walkTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                sprite.setTranslateX(sprite.getTranslateX() + (spriteOnRight ? -3 : 3));
+                movetick++;
+
+                if(movetick == 30){
+                    sprite.setDisable(true);
+                    walkTimer.stop();
+                }
+            }
+        };
+        walkTimer.start();
+    }
+
+    private ImageView getSpriteImgView(){
+        return sprite;
+    }
+
+//    private void movePlayerY(int value) {
+//        boolean movingDown = value > 0;
+//
+//        for (int i = 0; i < Math.abs(value); i++) {
+//            for (Node platform : platforms) {
+//                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {
+//                    if (movingDown) {
+//                        if (player.getTranslateY() + 40 == platform.getTranslateY()) {
+//                            player.setTranslateY(player.getTranslateY() - 1);
+//                            canJump = true;
+//                            return;
+//                        }
+//                    }
+//                    else {
+//                        if (player.getTranslateY() == platform.getTranslateY() + blockSize) {
+//                            return;
+//                        }
+//                    }
+//                }
+//            }
+//            player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
+//        }
+//    }
 }

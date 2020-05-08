@@ -2,7 +2,6 @@ package sample;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javafx.animation.AnimationTimer;
@@ -19,8 +18,8 @@ public class Main extends Application {
 
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
 
-    private ArrayList<Node> platforms = new ArrayList<Node>();
-    private ArrayList<Node> enemies = new ArrayList<Node>();
+    private static ArrayList<Node> platforms = new ArrayList<Node>();
+    private static ArrayList<Node> enemies = new ArrayList<Node>();
     private static ArrayList<Answer> buttons = new ArrayList<Answer>();
 
     private static ArrayList<Map> questions = new ArrayList<>();
@@ -29,35 +28,37 @@ public class Main extends Application {
 
     private static ArrayList<Map> allContent;
 
-    private Pane appRoot = new Pane();
-    private Pane gameRoot = new Pane();
-    private Pane uiRoot = new Pane();
+    private static Pane appRoot = new Pane();
+    private static Pane gameRoot = new Pane();
+    private static Pane uiRoot = new Pane();
 
-    private ImageView player;
-    private ImageView enemy;
-    private Point2D playerVelocity = new Point2D(0, 0);
+    private static ImageView player;
+    private static ImageView enemy;
+    private static Point2D playerVelocity = new Point2D(0, 0);
     private boolean canJump = true;
-    private Sprite sprite;
+    private static Sprite sprite;
     private static Question question;
 
-    private int levelWidth;
+    private static int levelWidth;
     private static int blockSize;
 
     private static int questionColumn;
     private static int questionRow;
 
-    private int playerWidth;
-    private int playerHeight;
-    private int playerX;
-    private int playerY;
+    private static int playerWidth;
+    private static int playerHeight;
+    private static int playerX;
+    private static int playerY;
 
-    private String correctAnswer;
+    private static int gameWidth = 490;
 
-    private boolean dialogEvent = false, running = true;
+    private static String correctAnswer;
 
-    private int globaltick;
+    private static boolean dialogEvent = false, running = true;
+
+    private static int globaltick;
     private static int animationtick;
-    private int second;
+    private static int second;
 
     private static int currentLevel = 0;
 //    private static int currentLevel = 2;
@@ -67,9 +68,9 @@ public class Main extends Application {
 
     private static boolean enemyIdlePaused = false;
 
-    private Background background = new Background();
+    private static Background background = new Background();
 
-    private void initContent() {
+    private static void initContent() {
         ImageView bg = background.getBackground();
 
         blockSize = 60;
@@ -160,7 +161,7 @@ public class Main extends Application {
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
 
-    private void answeredCorrectly(){
+    private static void answeredCorrectly(){
         int i = 0;
         for (Map questionAnswer : questions) {
             if(questionAnswer.values().contains(question.getCorrectAnswer())){
@@ -179,9 +180,11 @@ public class Main extends Application {
             }
             i++;
         }
+
+//        nextStageAnimations();
     }
 
-    private void answeredIncorrectly(Answer button){
+    private static void answeredIncorrectly(Answer button){
         //take damage > give enemy health
         //damage animation
         //add to incorrectly answered list
@@ -203,9 +206,15 @@ public class Main extends Application {
         question.updateQuestion(currentLevel);
         Answer.updateAnswers(question.getCorrectAnswer());
         score.setMaxScore(levelQuestions.size());
+
+        if(currentLevel > 1){
+            Sprite.moveSpriteAway(enemy);
+            question.hideBriefly();
+            Sprite.moveInNewEnemy();
+        }
     }
 
-    private void update() {
+    private static void update() {
         globaltick++;
         animationtick++;
 
@@ -219,71 +228,9 @@ public class Main extends Application {
 //        if (isPressed(KeyCode.D) && player.getTranslateX() + 40 <= levelWidth - 5) {
 //            movePlayerX(5);
 //        }
-
-        for (Node enemy : enemies) {
-            if (player.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                enemy.getProperties().put("alive", false);
-                dialogEvent = true;
-                running = false;   //redundant
-            }
-        }
-
-        for (Iterator<Node> it = enemies.iterator(); it.hasNext(); ) {
-            Node coin = it.next();
-            if (!(Boolean)coin.getProperties().get("alive")) {
-                it.remove();
-                gameRoot.getChildren().remove(coin);
-            }
-        }
     }
 
-//    private void movePlayerX(int value) {
-//        boolean movingRight = value > 0;
-//
-//        for (int i = 0; i < Math.abs(value); i++) {
-//            for (Node platform : platforms) {
-//                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {       //collision met platform
-//                    if (movingRight) {
-//                        if (player.getTranslateX() + 40 == platform.getTranslateX()) {             //collides rechts
-//                            return;                                                                //kan niet meer bewegen
-//                        }
-//                    }
-//                    else {                                                                      //height player
-//                        if (player.getTranslateX() == platform.getTranslateX() + blockSize) {
-//                            return;
-//                        }
-//                    }
-//                }
-//            }
-//            player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : -1));
-//        }
-//    }
-//
-//    private void movePlayerY(int value) {
-//        boolean movingDown = value > 0;
-//
-//        for (int i = 0; i < Math.abs(value); i++) {
-//            for (Node platform : platforms) {
-//                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {
-//                    if (movingDown) {
-//                        if (player.getTranslateY() + 40 == platform.getTranslateY()) {
-//                            player.setTranslateY(player.getTranslateY() - 1);
-//                            canJump = true;
-//                            return;
-//                        }
-//                    }
-//                    else {
-//                        if (player.getTranslateY() == platform.getTranslateY() + blockSize) {
-//                            return;
-//                        }
-//                    }
-//                }
-//            }
-//            player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : -1));
-//        }
-//    }
-
-    private ImageView createSprite(int x, int y, int w, int h, String path){
+    private static ImageView createSprite(int x, int y, int w, int h, String path){
         Sprite spriteObj = new Sprite(x, y, w, h, path);
         ImageView sprite = spriteObj.createSprite();
         gameRoot.getChildren().add(sprite);
@@ -298,7 +245,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         initContent();
 
-        Scene scene = new Scene(appRoot, 490, 700);
+        Scene scene = new Scene(appRoot, gameWidth, 700);
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
         primaryStage.setTitle("한글");
@@ -357,6 +304,8 @@ public class Main extends Application {
     }
 
     public static int getCurrentLevel(){return currentLevel;}
+
+    public static int getGameWidth(){return gameWidth;}
 
     public static Map<String, String> getQuestionsArray(){
         return levelQuestions;

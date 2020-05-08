@@ -31,7 +31,8 @@ public class Background extends ImageView{
                     if (tick == 50) setBackground("sample/resources/img/fountain/fountain4.png");
                     if (tick == 60) setBackground("sample/resources/img/fountain/fountain5.png");
                     if (tick == 70) setBackground("sample/resources/img/fountain/fountain6.png");
-                    if (tick == 80) setBackground("sample/resources/img/fountain/fountain7.png");
+                    if (tick == 75) setBackground("sample/resources/img/fountain/fountain7.png");
+                    if (tick == 80) setBackground("sample/resources/img/fountain/fountain8.png");
                     if (tick == 90) {
                         bg.setImage(bgImgORI);
                         timer.stop();
