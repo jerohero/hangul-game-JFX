@@ -116,7 +116,7 @@ public class Question extends Pane {
             @Override
             public void handle(long now) {
                 tick++;
-                if(tick == 120) {
+                if(tick == 170) {
                     questionObject.setVisible(true);
                     tick = 0; timer.stop();
                 }

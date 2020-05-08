@@ -109,6 +109,11 @@ public class Answer extends GridPane {
         timerIsRunning = true;
     }
 
+    public void setButtonToGreen(){
+        Image buttonImgGreen = new Image("sample/resources/img/buttonbubble-green.png");
+        buttonbubble.setImage(buttonImgGreen);
+    }
+
     public void setButtonToWhite(){
         buttonbubble.setImage(buttonImg);
         if(timerIsRunning){

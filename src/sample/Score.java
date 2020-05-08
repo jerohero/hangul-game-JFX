@@ -19,7 +19,6 @@ public class Score extends Pane {
         this.x = x;
         this.y = y;
         playerScore = 0;
-        maxScore = 10;
         scoreBarWidth = 300;
 
 //        Rectangle scoreBar = new Rectangle(scoreBarWidth, 30);
@@ -35,8 +34,8 @@ public class Score extends Pane {
         scoreProgress.setY(8);
         scoreProgress.setFill(Color.LIMEGREEN);
 
-        maxScoreToWidth = scoreBarWidth / maxScore;
-        playerScoreToWidth = playerScore * maxScoreToWidth;
+//        maxScoreToWidth = scoreBarWidth / maxScore;
+//        playerScoreToWidth = playerScore * maxScoreToWidth;
 
 
         this.getChildren().add(scoreBar);

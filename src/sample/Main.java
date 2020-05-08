@@ -6,6 +6,9 @@ import java.util.Map;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -66,6 +69,8 @@ public class Main extends Application {
     private static Score score;
     private static int playerScore;
 
+    private static Map<String, String> enemyPaths;
+
     private static boolean enemyIdlePaused = false;
 
     private static Background background = new Background();
@@ -87,7 +92,8 @@ public class Main extends Application {
                         platforms.add(platform);
                         break;
                     case '2':
-                        enemy = createSprite(column*blockSize, row*blockSize-(133/2+45), 120, 172, "sample/resources/img/enemy1.png");
+                        enemyPaths = Sprite.initEnemyPaths(1);
+                        enemy = createSprite(column*blockSize, row*blockSize-(133/2+45), 120, 172, enemyPaths.get("default"));
                         enemies.add(enemy);
                         break;
                     case '3':
@@ -97,9 +103,6 @@ public class Main extends Application {
                     case '4':
                         questionColumn = column;
                         questionRow = row;
-                        String hangul = "";
-                        String romanized = "";
-
                         question = new Question();
                         gameRoot.getChildren().add(question);
                         break;
@@ -146,7 +149,7 @@ public class Main extends Application {
                 System.out.println(button.getAnswer());
                 if(question.isCorrect(button.getAnswer())){
                     //volgende vraag
-                    answeredCorrectly();
+                    answeredCorrectly(button);
                 }
                 else{
                     //takehit
@@ -161,33 +164,49 @@ public class Main extends Application {
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
 
-    private static void answeredCorrectly(){
-        int i = 0;
-        for (Map questionAnswer : questions) {
-            if(questionAnswer.values().contains(question.getCorrectAnswer())){
-                playerScore++;
-                score.setPlayerScore(playerScore);
-                System.out.println(playerScore);
+    private static void answeredCorrectly(Answer button){
+        playerScore++;
+        score.setPlayerScore(playerScore);
+        background.fountainAnimation();
+        button.setButtonToGreen();
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons.get(i).setDisable(true);
+        }
+
+        Task<Void> sleeper = new Task<Void>(){
+            @Override
+            protected Void call() throws Exception {
+                try{
+                    Thread.sleep(500);
+                }
+                catch(InterruptedException e){}
+                return null;
+            }
+        };
+        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                for (int i = 0; i < buttons.size(); i++) {
+                    buttons.get(i).setDisable(false);
+                }
                 Sprite.enemyTalk(enemy, animationtick);
                 question.updateQuestion(currentLevel);
                 Answer.updateAnswers(question.getCorrectAnswer());
-                background.fountainAnimation();
-//                while(questionAnswer.values().remove(answer));
                 System.out.println("Answered:" + questions);
                 for (int j = 0; j < 4 ; j++) {
                     buttons.get(j).setButtonToWhite();
                 }
             }
-            i++;
-        }
-
-//        nextStageAnimations();
+        });
+        new Thread(sleeper).start();
     }
 
     private static void answeredIncorrectly(Answer button){
         //take damage > give enemy health
         //damage animation
         //add to incorrectly answered list
+        score.setMaxScore(score.getMaxScore() + 1);
+        System.out.println(score.getMaxScore());
         playerScore--;
         score.setPlayerScore(playerScore);
         Sprite.spriteHit(enemy, animationtick, "enemy");
@@ -208,9 +227,10 @@ public class Main extends Application {
         score.setMaxScore(levelQuestions.size());
 
         if(currentLevel > 1){
-            Sprite.moveSpriteAway(enemy);
+//            enemyPaths = Sprite.initEnemyPaths(currentLevel);
+//            updateEnemyPaths();
+            Sprite.newEnemy(enemy);
             question.hideBriefly();
-            Sprite.moveInNewEnemy();
         }
     }
 
@@ -220,14 +240,6 @@ public class Main extends Application {
 
         Sprite.spriteIdle(player, animationtick, "player");
         if(!enemyIdlePaused) Sprite.spriteIdle(enemy, animationtick, "enemy");
-
-//        if (isPressed(KeyCode.A) && player.getTranslateX() >= 5) {
-//            movePlayerX(-5);
-//        }
-//
-//        if (isPressed(KeyCode.D) && player.getTranslateX() + 40 <= levelWidth - 5) {
-//            movePlayerX(5);
-//        }
     }
 
     private static ImageView createSprite(int x, int y, int w, int h, String path){
@@ -301,6 +313,15 @@ public class Main extends Application {
 
     public static int getAnimationTick(){
         return animationtick;
+    }
+
+    public static Map<String, String> getEnemyPaths(){
+        return enemyPaths;
+    }
+
+    public static void updateEnemyPaths(){
+        Map<String, String> newEnemyPaths = Sprite.initEnemyPaths(currentLevel);
+        newEnemyPaths = enemyPaths;
     }
 
     public static int getCurrentLevel(){return currentLevel;}

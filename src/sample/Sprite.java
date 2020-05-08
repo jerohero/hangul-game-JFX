@@ -4,12 +4,18 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Sprite {
-    private int h;
-    private int w;
-    private int x;
-    private int y;
+    private static int h;
+    private static int w;
+    private static int x;
+    private static int y;
     private String path;
+
+//    private static double originalpos;
 
     private static int tick;
     private static AnimationTimer walkTimer;
@@ -18,6 +24,8 @@ public class Sprite {
     private static boolean animationIsActive = false;
     private static int distancemoved;
     private static int movetick;
+
+    private static Map<String, String> enemy_path;
 
     ImageView sprite;
 
@@ -29,8 +37,6 @@ public class Sprite {
         this.path = path;
     }
 
-    
-
     public ImageView createSprite(){
         Image img = new Image(path);
         sprite = new ImageView(img);
@@ -41,6 +47,34 @@ public class Sprite {
         sprite.getProperties().put("alive", true);
 
         return sprite;
+    }
+
+    public static Map<String, String> initEnemyPaths(int currentLevel){
+        enemy_path = new HashMap<>();
+
+        if(currentLevel == 1){
+            enemy_path.put("default", "sample/resources/img/enemy1.png");
+            enemy_path.put("idle", "sample/resources/img/enemy1v2.png");
+            enemy_path.put("hit", "sample/resources/img/enemy1-hit.png");
+            enemy_path.put("talk", "sample/resources/img/enemy1-talk.png");
+        }
+        if(currentLevel == 2){
+            enemy_path.put("default", "sample/resources/img/enemy2.png");
+            enemy_path.put("idle", "sample/resources/img/enemy2v2.png");
+            enemy_path.put("hit", "sample/resources/img/enemy2-hit.png");
+            enemy_path.put("talk", "sample/resources/img/enemy2-talk.png");
+        }
+        if(currentLevel == 3){
+            enemy_path.put("default", "sample/resources/img/enemy3.png");
+            enemy_path.put("idle", "sample/resources/img/enemy3v2.png");
+            enemy_path.put("hit", "sample/resources/img/enemy3-hit.png");
+            enemy_path.put("talk", "sample/resources/img/enemy3-talk.png");
+        }
+
+//        Sprite enemyObj = new Sprite(x, y, w, h, enemy_path.get("default"));
+//        ImageView enemy = enemyObj.createSprite();
+
+        return enemy_path;
     }
 
 
@@ -60,10 +94,10 @@ public class Sprite {
         }
         else if(type == "enemy"){
             if(animationtick % 60 == 0){
-                changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
+                changeSpriteImg(sprite, enemy_path.get("default"));
             }
             if(animationtick % 120 == 0){
-                changeSpriteImg(sprite, "sample/resources/img/enemy1v2.png");
+                changeSpriteImg(sprite, enemy_path.get("idle"));
             }
 //            if(animationtick % 420 == 0){
 //                changeSpriteImg(sprite, "sample/resources/img/enemy1v3old.png");
@@ -73,7 +107,7 @@ public class Sprite {
 
     public static void spriteHit(ImageView sprite, int animationtick, String type){
         if(type == "enemy"){
-            changeSpriteImg(sprite, "sample/resources/img/enemy1-hit.png");
+            changeSpriteImg(sprite, enemy_path.get("hit"));
         }
     }
 
@@ -86,10 +120,10 @@ public class Sprite {
                     tick++;
                     animationIsActive = true;
                     if(tick % 10 == 0){
-                        changeSpriteImg(sprite, "sample/resources/img/enemy1-talk.png");
+                        changeSpriteImg(sprite, enemy_path.get("talk"));
                     }
                     if(tick % 20 == 0){
-                        changeSpriteImg(sprite, "sample/resources/img/enemy1.png");
+                        changeSpriteImg(sprite, enemy_path.get("default"));
                     }
                     if(tick > 60){
                         talkTimer.stop();
@@ -103,33 +137,30 @@ public class Sprite {
         }
     }
 
-    public static void moveInNewEnemy(){
-        walkTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                movetick++;
-
-                if(movetick == 40){
-
-                }
-            }
-        };
-
-    }
-
-    public static void moveSpriteAway(ImageView sprite) {
+    public static void newEnemy(ImageView sprite) {
         boolean spriteOnRight =  sprite.getX() > Main.getGameWidth()/2 ? true : false;
+        double originalpos = sprite.getTranslateX();
+        movetick = 0;
+
 
         talkTimer.stop();
         walkTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                sprite.setTranslateX(sprite.getTranslateX() + (spriteOnRight ? -3 : 3));
                 movetick++;
 
-                if(movetick == 30){
-                    sprite.setDisable(true);
-                    walkTimer.stop();
+                if(movetick < 90){
+                    sprite.setTranslateX(sprite.getTranslateX() + (spriteOnRight ? -3 : 3));
+                }
+                if(movetick > 90){
+                    if(sprite.getTranslateX() != originalpos){
+                        initEnemyPaths(Main.getCurrentLevel());
+                        sprite.setTranslateX(sprite.getTranslateX() + (spriteOnRight ? 3 : -3));
+                    }
+                    else {
+                        walkTimer.stop();
+                        return;
+                    }
                 }
             }
         };
