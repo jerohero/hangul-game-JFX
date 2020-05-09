@@ -20,6 +20,7 @@ public class Question extends Pane {
     private static ArrayList<Map> askedQuestions;
     private static Map<String, String> questionsLeft = new HashMap<>();
     private static int resetcounter;
+    private ImageView bubble;
 
     private AnimationTimer timer;
     private int tick;
@@ -27,16 +28,11 @@ public class Question extends Pane {
     //    public Question(String hangul, String romanized){
     public Question(){
         Image bubbleImg = new Image("sample/resources/img/textbubble0.png");
-        ImageView bubble = new ImageView(bubbleImg);
+        bubble = new ImageView(bubbleImg);
         bubble.setFitWidth(140);
         bubble.setFitHeight(140);
 
-//        questionAnswer.put(hangul, romanized);
-//        Main.addToQuestionsArray(questionAnswer);
-
         text = new Text();
-//        answer = questionAnswer.get(hangul);
-
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         getStyleClass().add("questiontxt");
         text.setTranslateX(25);
@@ -49,13 +45,39 @@ public class Question extends Pane {
         this.setTranslateY(Main.getQuestionRow() * Main.getBlockSize() - 170);
     }
 
+    public void biggerQuestion(){
+        if (Main.getCurrentLevel() == 4){ // 4
+            Image bubbleImg = new Image("sample/resources/img/textbubble1.png");
+            bubble.setFitWidth(180);
+            bubble.setFitHeight(140);
+            bubble.setImage(bubbleImg);
+
+            text.setStyle("-fx-font: 70 'serif';");
+            text.setTranslateY(text.getTranslateY() - 6);
+            text.setTranslateX(text.getTranslateX()  - 2);
+
+            this.setTranslateX(this.getTranslateX() - 20);
+        }
+//        if(Main.getCurrentLevel() == 6){ //5
+//            Image bubbleImg = new Image("sample/resources/img/textbubble1.png");
+//            bubble.setFitWidth(180);
+//            bubble.setFitHeight(140);
+//            bubble.setImage(bubbleImg);
+//
+//            text.setStyle("-fx-font: 70 'serif';");
+//            text.setTranslateY(text.getTranslateY() - 6);
+//            text.setTranslateX(text.getTranslateX()  - 2);
+//
+//            this.setTranslateX(this.getTranslateX() - 20);
+//        }
+    }
+
     public void updateQuestion(int currentLevel){
         String newQuestion = "";
         String newAnswer = null;
         Map<String, String> incorrectAnswers = new HashMap<>();
 
         levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
-//        System.out.println(levelQuestions);
         askedQuestions = Main.getAskedQuestions();
         if(questionsLeft.isEmpty()){
             questionsLeft.putAll(levelQuestions);
@@ -130,8 +152,6 @@ public class Question extends Pane {
     }
 
     public boolean isCorrect(String answered){
-//        if (true){
-
         if (answered.equals(answer)){
             return true;
         }

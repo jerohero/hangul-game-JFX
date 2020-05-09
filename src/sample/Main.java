@@ -158,6 +158,8 @@ public class Main extends Application {
             });
         }
         allContent = QuestionUtils.initializeQuestions();
+
+        currentLevel = 3;
         nextStage();
 
         appRoot.setStyle("-fx-background-color: #e3d7bf");
@@ -219,6 +221,7 @@ public class Main extends Application {
 
     public static void nextStage(){
         currentLevel++;
+//        currentLevel = 2;
         Question.resetResetCounter();
         Question.clearQuestionsLeft();
         levelQuestions = QuestionUtils.getQuestions(currentLevel);
@@ -229,8 +232,17 @@ public class Main extends Application {
         if(currentLevel > 1){
 //            enemyPaths = Sprite.initEnemyPaths(currentLevel);
 //            updateEnemyPaths();
+
             Sprite.newEnemy(enemy);
             question.hideBriefly();
+//          if(currentLevel >= 4){
+            if(currentLevel >= 1){
+                System.out.println(currentLevel);
+                question.biggerQuestion();
+                for (int i = 0; i < buttons.size() ; i++) {
+                    buttons.get(i).biggerAnswer();
+                }
+            }
         }
     }
 

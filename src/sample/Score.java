@@ -60,6 +60,7 @@ public class Score extends Pane {
 
     public void setMaxScore(int maxScore){
         this.maxScore = maxScore;
+//        this.maxScore = 2;
         maxScoreToWidth = scoreBarWidth / maxScore;
     }
     public int getMaxScore(){

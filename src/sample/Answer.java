@@ -88,6 +88,22 @@ public class Answer extends GridPane {
         answers.clear();
     }
 
+    public void biggerAnswer(){
+        if(Main.getCurrentLevel() == 5) {
+            Image biggerButtonImg = new Image("sample/resources/img/buttonbubble1.png");
+            buttonbubble.setImage(biggerButtonImg);
+            buttonbubble.setFitWidth(211);
+
+            if(side == "left"){
+                this.setTranslateX(this.getTranslateX() - 25);
+            }
+            else{
+                this.setTranslateX(this.getTranslateX() - 3);
+            }
+            text.setTranslateX(text.getTranslateX()+10);
+        }
+    }
+
     public void setButtonToRed(){
         if(timerIsRunning)return;
         Image buttonImgRed = new Image("sample/resources/img/buttonbubble-red.png");
@@ -128,11 +144,27 @@ public class Answer extends GridPane {
 
     public void setAnswer(String answer){
         this.answer = answer;
-        if(answer.length() >= 4){
-            text.setStyle("-fx-font: 60 'SF Pixelate';");
+        if(Main.getCurrentLevel() < 4) {
+            if(answer.length() >= 4){
+                text.setStyle("-fx-font: 60 'SF Pixelate';");
+            }
+            else if(answer.length() == 3){
+                text.setStyle("-fx-font: 70 'SF Pixelate';");
+            }
+            else{
+                text.setStyle("-fx-font: 80 'SF Pixelate';");
+            }
         }
-        else{
-            text.setStyle("-fx-font: 80 'SF Pixelate';");
+        else if(Main.getCurrentLevel() == 4) {
+            if(answer.length() >= 7){
+                text.setStyle("-fx-font: 33 'SF Pixelate';");
+            }
+            else if(answer.length() < 7 && answer.length() >= 5){
+                text.setStyle("-fx-font: 40 'SF Pixelate';");
+            }
+            else{
+                text.setStyle("-fx-font: 50 'SF Pixelate';");
+            }
         }
         text.setText("");
         text.setText(answer);

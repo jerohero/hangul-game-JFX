@@ -70,10 +70,18 @@ public class Sprite {
             enemy_path.put("hit", "sample/resources/img/enemy3-hit.png");
             enemy_path.put("talk", "sample/resources/img/enemy3-talk.png");
         }
-
-//        Sprite enemyObj = new Sprite(x, y, w, h, enemy_path.get("default"));
-//        ImageView enemy = enemyObj.createSprite();
-
+        if(currentLevel == 4){
+            enemy_path.put("default", "sample/resources/img/enemy4.png");
+            enemy_path.put("idle", "sample/resources/img/enemy4v2.png");
+            enemy_path.put("hit", "sample/resources/img/enemy4-hit.png");
+            enemy_path.put("talk", "sample/resources/img/enemy4-talk.png");
+        }
+        if(currentLevel == 5){
+            enemy_path.put("default", "sample/resources/img/enemy5.png");
+            enemy_path.put("idle", "sample/resources/img/enemy5v2.png");
+            enemy_path.put("hit", "sample/resources/img/enemy5-hit.png");
+            enemy_path.put("talk", "sample/resources/img/enemy5-talk.png");
+        }
         return enemy_path;
     }
 
@@ -142,8 +150,6 @@ public class Sprite {
         double originalpos = sprite.getTranslateX();
         movetick = 0;
 
-
-        talkTimer.stop();
         walkTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {

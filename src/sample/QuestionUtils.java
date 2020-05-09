@@ -14,7 +14,8 @@ public class QuestionUtils {
     public static Map<String, String> getQuestions(int currentLevel) {
         if(currentLevel == 1){path = "src/sample/data/lv1.txt";}
         else if(currentLevel == 2){path = "src/sample/data/lv2.txt";}
-
+        else if(currentLevel == 3){path = "src/sample/data/lv3.txt";}
+        else if(currentLevel == 4){path = "src/sample/data/lv4.txt";}
 
         try {
             bufReader = new BufferedReader(new FileReader(new File(path)));
@@ -45,11 +46,22 @@ public class QuestionUtils {
 
         Map<String, String> level2questions = QuestionUtils.getQuestions(2);
         level2questions = shuffleQuestions(level2questions);
-        System.out.println("Level2questions: " + level2questions );
+
+        Map<String, String> level3questions = QuestionUtils.getQuestions(3);
+        level3questions = shuffleQuestions(level3questions);
+
+        Map<String, String> level4questions = QuestionUtils.getQuestions(4);
+        level4questions = shuffleQuestions(level4questions);
+
+        Map<String, String> level5questions = QuestionUtils.getQuestions(5);
+        level5questions = shuffleQuestions(level5questions);
 
         allLevels = new ArrayList<>();
         allLevels.add(level1questions);
         allLevels.add(level2questions);
+        allLevels.add(level3questions);
+        allLevels.add(level4questions);
+        allLevels.add(level5questions);
         return allLevels;
     }
 
