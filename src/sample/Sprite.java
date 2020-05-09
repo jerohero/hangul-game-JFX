@@ -52,36 +52,11 @@ public class Sprite {
     public static Map<String, String> initEnemyPaths(int currentLevel){
         enemy_path = new HashMap<>();
 
-        if(currentLevel == 1){
-            enemy_path.put("default", "sample/resources/img/enemy1.png");
-            enemy_path.put("idle", "sample/resources/img/enemy1v2.png");
-            enemy_path.put("hit", "sample/resources/img/enemy1-hit.png");
-            enemy_path.put("talk", "sample/resources/img/enemy1-talk.png");
-        }
-        if(currentLevel == 2){
-            enemy_path.put("default", "sample/resources/img/enemy2.png");
-            enemy_path.put("idle", "sample/resources/img/enemy2v2.png");
-            enemy_path.put("hit", "sample/resources/img/enemy2-hit.png");
-            enemy_path.put("talk", "sample/resources/img/enemy2-talk.png");
-        }
-        if(currentLevel == 3){
-            enemy_path.put("default", "sample/resources/img/enemy3.png");
-            enemy_path.put("idle", "sample/resources/img/enemy3v2.png");
-            enemy_path.put("hit", "sample/resources/img/enemy3-hit.png");
-            enemy_path.put("talk", "sample/resources/img/enemy3-talk.png");
-        }
-        if(currentLevel == 4){
-            enemy_path.put("default", "sample/resources/img/enemy4.png");
-            enemy_path.put("idle", "sample/resources/img/enemy4v2.png");
-            enemy_path.put("hit", "sample/resources/img/enemy4-hit.png");
-            enemy_path.put("talk", "sample/resources/img/enemy4-talk.png");
-        }
-        if(currentLevel == 5){
-            enemy_path.put("default", "sample/resources/img/enemy5.png");
-            enemy_path.put("idle", "sample/resources/img/enemy5v2.png");
-            enemy_path.put("hit", "sample/resources/img/enemy5-hit.png");
-            enemy_path.put("talk", "sample/resources/img/enemy5-talk.png");
-        }
+        enemy_path.put("default", "sample/resources/img/enemy" + currentLevel + ".png");
+        enemy_path.put("idle", "sample/resources/img/enemy" + currentLevel + "v2.png");
+        enemy_path.put("hit", "sample/resources/img/enemy" + currentLevel + "-hit.png");
+        enemy_path.put("talk", "sample/resources/img/enemy" + currentLevel + "-talk.png");
+
         return enemy_path;
     }
 

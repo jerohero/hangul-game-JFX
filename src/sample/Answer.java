@@ -90,8 +90,7 @@ public class Answer extends GridPane {
 
     public void biggerAnswer(){
         if(Main.getCurrentLevel() == 5) {
-            Image biggerButtonImg = new Image("sample/resources/img/buttonbubble1.png");
-            buttonbubble.setImage(biggerButtonImg);
+            buttonImg = new Image("sample/resources/img/buttonbubble1.png");
             buttonbubble.setFitWidth(211);
 
             if(side == "left"){
@@ -102,11 +101,38 @@ public class Answer extends GridPane {
             }
             text.setTranslateX(text.getTranslateX()+10);
         }
+
+        if(Main.getCurrentLevel() == 6){
+            buttonImg = new Image("sample/resources/img/buttonbubble2.png");
+            buttonbubble.setFitWidth(453);
+            buttonbubble.setFitHeight(72);
+
+
+            buttons.get(0).setTranslateY(buttons.get(0).getTranslateY() - 6);
+            buttons.get(0).setTranslateX(23);
+
+            for (int i = 0; i < buttons.size(); i++) {
+                if(i != 0){
+                    buttons.get(i).setTranslateY(buttons.get(0).getTranslateY() + 70 * i);
+                    buttons.get(i).setTranslateX(buttons.get(0).getTranslateX() + 4);
+                }
+            }
+//            buttons.get(0).setTranslateX(buttons.get(0).getTranslateX() + 4);
+            text.setWrappingWidth(buttonbubble.getFitWidth());
+        }
+        buttonbubble.setImage(buttonImg);
     }
 
     public void setButtonToRed(){
         if(timerIsRunning)return;
-        Image buttonImgRed = new Image("sample/resources/img/buttonbubble-red.png");
+
+        Image buttonImgRed;
+        if(buttons.get(0).getWidth() < 200)
+            buttonImgRed = new Image("sample/resources/img/buttonbubble-red.png");
+        else if(buttons.get(0).getWidth() > 200 && buttons.get(0).getWidth() < 300)
+            buttonImgRed = new Image("sample/resources/img/buttonbubble1-red.png");
+        else
+            buttonImgRed = new Image("sample/resources/img/buttonbubble2-red.png");
         buttonbubble.setImage(buttonImgRed);
 
         timer = new AnimationTimer() {
@@ -126,7 +152,13 @@ public class Answer extends GridPane {
     }
 
     public void setButtonToGreen(){
-        Image buttonImgGreen = new Image("sample/resources/img/buttonbubble-green.png");
+        Image buttonImgGreen;
+        if(buttons.get(0).getWidth() < 200)
+            buttonImgGreen = new Image("sample/resources/img/buttonbubble-green.png");
+        else if(buttons.get(0).getWidth() > 200 && buttons.get(0).getWidth() < 300)
+            buttonImgGreen = new Image("sample/resources/img/buttonbubble1-green.png");
+        else
+            buttonImgGreen = new Image("sample/resources/img/buttonbubble2-green.png");
         buttonbubble.setImage(buttonImgGreen);
     }
 
@@ -144,28 +176,15 @@ public class Answer extends GridPane {
 
     public void setAnswer(String answer){
         this.answer = answer;
-        if(Main.getCurrentLevel() < 4) {
-            if(answer.length() >= 4){
-                text.setStyle("-fx-font: 60 'SF Pixelate';");
-            }
-            else if(answer.length() == 3){
-                text.setStyle("-fx-font: 70 'SF Pixelate';");
-            }
-            else{
-                text.setStyle("-fx-font: 80 'SF Pixelate';");
-            }
-        }
-        else if(Main.getCurrentLevel() == 4) {
-            if(answer.length() >= 7){
-                text.setStyle("-fx-font: 33 'SF Pixelate';");
-            }
-            else if(answer.length() < 7 && answer.length() >= 5){
-                text.setStyle("-fx-font: 40 'SF Pixelate';");
-            }
-            else{
-                text.setStyle("-fx-font: 50 'SF Pixelate';");
-            }
-        }
+        int length = answer.length();
+
+        if(length == 1) text.setStyle("-fx-font: 80 'SF Pixelate';");
+        else if(length == 2 || length == 3) text.setStyle("-fx-font: 70 'SF Pixelate';");
+        else if(length == 4) text.setStyle("-fx-font: 55 'SF Pixelate';");
+        else if(length >= 5 && length < 7) text.setStyle("-fx-font: 45 'SF Pixelate';");
+        else if(length == 7) text.setStyle("-fx-font: 38 'SF Pixelate';");
+        else text.setStyle("-fx-font: 33 'SF Pixelate';");
+
         text.setText("");
         text.setText(answer);
     }

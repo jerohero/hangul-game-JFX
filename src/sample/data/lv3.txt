@@ -4,4 +4,4 @@
 웨:we
 외:way
 위:wi
-의:ui/eh
+의:ui/e

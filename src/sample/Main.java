@@ -159,7 +159,7 @@ public class Main extends Application {
         }
         allContent = QuestionUtils.initializeQuestions();
 
-        currentLevel = 3;
+//        currentLevel = 6 -1;
         nextStage();
 
         appRoot.setStyle("-fx-background-color: #e3d7bf");
