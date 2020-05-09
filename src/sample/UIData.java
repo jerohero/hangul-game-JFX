@@ -2,7 +2,7 @@ package sample;
 
 public class UIData {
     public static final String[] UI = new String[] {
-            "0050000000",
+            "0650000000",
             "0000000000",
             "0000000000",
             "0000000000",

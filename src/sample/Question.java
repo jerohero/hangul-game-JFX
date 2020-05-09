@@ -23,7 +23,7 @@ public class Question extends Pane {
     private AnimationTimer timer;
     private int tick;
 
-    public Question(){
+    public Question(int x, int y){
         Image bubbleImg = new Image("sample/resources/img/textbubble0.png");
         bubble = new ImageView(bubbleImg);
         bubble.setFitWidth(140);
@@ -38,12 +38,12 @@ public class Question extends Pane {
         this.getChildren().add(bubble);
         this.getChildren().add(text);
 
-        this.setTranslateX(Main.getQuestionColumn() * Main.getBlockSize() - 12);
-        this.setTranslateY(Main.getQuestionRow() * Main.getBlockSize() - 170);
+        this.setTranslateX(x);
+        this.setTranslateY(y);
     }
 
     public void biggerQuestion(){
-        Image bubbleImg = null;
+        Image bubbleImg;
         if (Main.getCurrentLevel() == 5){
             bubbleImg = new Image("sample/resources/img/textbubble1.png");
             bubble.setFitWidth(180);
@@ -53,6 +53,7 @@ public class Question extends Pane {
             text.setTranslateX(text.getTranslateX()  - 2);
 
             this.setTranslateX(this.getTranslateX() - 20);
+            bubble.setImage(bubbleImg);
         }
         if (Main.getCurrentLevel() == 6){
             bubbleImg = new Image("sample/resources/img/textbubble2.png");
@@ -63,16 +64,29 @@ public class Question extends Pane {
             text.setTranslateY(text.getTranslateY() - 8);
 
             this.setTranslateX(this.getTranslateX() - 95);
+            bubble.setImage(bubbleImg);
         }
-        bubble.setImage(bubbleImg);
     }
 
-    public void updateQuestion(int currentLevel){
+    public void updateQuestion(){
         String newQuestion = "";
         String newAnswer = null;
-        Map<String, String> incorrectAnswers = new HashMap<>();
+        Map<String, String> incorrectAnswers;
 
-        levelQuestions = QuestionUtils.getAllLevels().get(currentLevel-1);
+        levelQuestions = QuestionUtils.getAllLevels().get(Main.getCurrentLevel()-1);
+        if(Main.getCurrentLevel() > 3){
+            System.out.println(levelQuestions);
+
+            for (int i = 0; i < levelQuestions.size()/3; i++) {
+
+                Object[] keys = levelQuestions.keySet().toArray();
+                Object key = keys[new Random().nextInt(keys.length)];
+
+                String hoi = levelQuestions.get(random.nextInt(levelQuestions.size()));
+                System.out.println(hoi);
+            }
+            System.out.println(levelQuestions);
+        }
         askedQuestions = Main.getAskedQuestions();
         if(questionsLeft.isEmpty()){
             questionsLeft.putAll(levelQuestions);
@@ -104,11 +118,10 @@ public class Question extends Pane {
                 }
                 else{
                     resetcounter = 1;
-                    this.updateQuestion(currentLevel);
+                    this.updateQuestion();
                     return;
                 }
             }
-//            }
             text.setText(newQuestion);
             questionAnswer.put(newQuestion, newAnswer);
             Main.updateAskedQuestions(questionAnswer);
@@ -153,14 +166,6 @@ public class Question extends Pane {
         return levelQuestions;
     }
 
-    public static Map<String, String> getQuestionsLeft(){
-        return questionsLeft;
-    }
-
-    public static void setQuestionsLeft(Map<String, String> newQuestionsLeft){
-        questionsLeft = newQuestionsLeft;
-    }
-
     public static void clearQuestionsLeft(){
         questionsLeft.clear();
     }
@@ -168,6 +173,4 @@ public class Question extends Pane {
     public static void resetResetCounter(){
         resetcounter = 1;
     }
-
-
 }

@@ -7,8 +7,6 @@ import java.util.Map;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -19,6 +17,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private static int levelAmount;
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
 
     private static ArrayList<Node> platforms = new ArrayList<Node>();
@@ -42,6 +41,8 @@ public class Main extends Application {
     private static Sprite sprite;
     private static Question question;
 
+    private static Levelindicator levelIndicator;
+
     private static int levelWidth;
     private static int blockSize;
 
@@ -64,7 +65,7 @@ public class Main extends Application {
     private static int second;
 
     private static int currentLevel = 0;
-//    private static int currentLevel = 2;
+    private static int startLevel;
 
     private static Score score;
     private static int playerScore;
@@ -103,7 +104,7 @@ public class Main extends Application {
                     case '4':
                         questionColumn = column;
                         questionRow = row;
-                        question = new Question();
+                        question = new Question(column*blockSize - 12, row*blockSize - 170);
                         gameRoot.getChildren().add(question);
                         break;
                 }
@@ -140,6 +141,10 @@ public class Main extends Application {
                         score = new Score(column * blockSize, row * blockSize);
                         uiRoot.getChildren().add(score);
                         break;
+                    case '6':
+                        levelIndicator = new Levelindicator(column * blockSize - 40, row * blockSize + 34);
+                        uiRoot.getChildren().add(levelIndicator);
+                        break;
                 }
             }
         }
@@ -147,26 +152,22 @@ public class Main extends Application {
         for (Answer button : buttons){
             button.setOnMouseClicked(event -> {
                 System.out.println(button.getAnswer());
-                if(question.isCorrect(button.getAnswer())){
-                    //volgende vraag
+                if(question.isCorrect(button.getAnswer()))
                     answeredCorrectly(button);
-                }
-                else{
-                    //takehit
-                    answeredIncorrectly(button);
-                }
+                else answeredIncorrectly(button);
             });
         }
         allContent = QuestionUtils.initializeQuestions();
 
-//        currentLevel = 6 -1;
+        currentLevel = 5 - 1;
+        startLevel = currentLevel + 1;
         nextStage();
 
         appRoot.setStyle("-fx-background-color: #e3d7bf");
         appRoot.getChildren().addAll(bg, gameRoot, uiRoot);
     }
 
-    private static void answeredCorrectly(Answer button){
+    private static void answeredCorrectly(Answer button) {
         playerScore++;
         score.setPlayerScore(playerScore);
         background.fountainAnimation();
@@ -175,38 +176,32 @@ public class Main extends Application {
             buttons.get(i).setDisable(true);
         }
 
-        Task<Void> sleeper = new Task<Void>(){
+        Task<Void> sleeper = new Task<Void>() {
             @Override
-            protected Void call() throws Exception {
-                try{
+            protected Void call() {
+                try {
                     Thread.sleep(500);
+                } catch (InterruptedException e) {
                 }
-                catch(InterruptedException e){}
                 return null;
             }
         };
-        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent event) {
-                for (int i = 0; i < buttons.size(); i++) {
-                    buttons.get(i).setDisable(false);
-                }
-                Sprite.enemyTalk(enemy, animationtick);
-                question.updateQuestion(currentLevel);
-                Answer.updateAnswers(question.getCorrectAnswer());
-                System.out.println("Answered:" + questions);
-                for (int j = 0; j < 4 ; j++) {
-                    buttons.get(j).setButtonToWhite();
-                }
+        sleeper.setOnSucceeded(event -> {
+            for (int i = 0; i < buttons.size(); i++) {
+                buttons.get(i).setDisable(false);
+            }
+            Sprite.enemyTalk(enemy, animationtick);
+            question.updateQuestion();
+            Answer.updateAnswers(question.getCorrectAnswer());
+            System.out.println("Answered:" + questions);
+            for (int j = 0; j < 4; j++) {
+                buttons.get(j).setButtonToWhite();
             }
         });
         new Thread(sleeper).start();
     }
 
     private static void answeredIncorrectly(Answer button){
-        //take damage > give enemy health
-        //damage animation
-        //add to incorrectly answered list
         score.setMaxScore(score.getMaxScore() + 1);
         System.out.println(score.getMaxScore());
         playerScore--;
@@ -221,35 +216,30 @@ public class Main extends Application {
 
     public static void nextStage(){
         currentLevel++;
-//        currentLevel = 2;
         Question.resetResetCounter();
         Question.clearQuestionsLeft();
         levelQuestions = QuestionUtils.getQuestions(currentLevel);
-        question.updateQuestion(currentLevel);
+        question.updateQuestion();
         Answer.updateAnswers(question.getCorrectAnswer());
-        score.setMaxScore(levelQuestions.size());
+        levelIndicator.updateLevelIndicator();
 
-        if(currentLevel > 1){
-//            enemyPaths = Sprite.initEnemyPaths(currentLevel);
-//            updateEnemyPaths();
+        if(currentLevel >= 4){
+            score.setMaxScore(levelQuestions.size());
 
+            question.biggerQuestion();
+            for (int i = 0; i < buttons.size() ; i++) {
+                buttons.get(i).biggerAnswer();
+            }
+        }
+
+        if(currentLevel != startLevel){
             Sprite.newEnemy(enemy);
             question.hideBriefly();
-//          if(currentLevel >= 4){
-            if(currentLevel >= 1){
-                System.out.println(currentLevel);
-                question.biggerQuestion();
-                for (int i = 0; i < buttons.size() ; i++) {
-                    buttons.get(i).biggerAnswer();
-                }
-            }
         }
     }
 
     private static void update() {
-        globaltick++;
         animationtick++;
-
         Sprite.spriteIdle(player, animationtick, "player");
         if(!enemyIdlePaused) Sprite.spriteIdle(enemy, animationtick, "enemy");
     }
@@ -303,9 +293,6 @@ public class Main extends Application {
         return questionRow;
     }
 
-//    public static ArrayList<Map> getQuestionsArray(){
-//        return questions;
-//    }
     public static void updateAskedQuestions(Map questionAnswer) {
         questions.clear();
         questions.add(questionAnswer);
@@ -314,47 +301,10 @@ public class Main extends Application {
     public static ArrayList<Map> getAskedQuestions(){
         return questions;
     }
-//
-//    public static void setQuestionList(ArrayList<Map> newQuestions){
-//        questions = newQuestions;
-//    }
-
-    public static void setAnimationTick(int newAnimationtick){
-        animationtick = newAnimationtick;
-    }
-
-    public static int getAnimationTick(){
-        return animationtick;
-    }
-
-    public static Map<String, String> getEnemyPaths(){
-        return enemyPaths;
-    }
-
-    public static void updateEnemyPaths(){
-        Map<String, String> newEnemyPaths = Sprite.initEnemyPaths(currentLevel);
-        newEnemyPaths = enemyPaths;
-    }
 
     public static int getCurrentLevel(){return currentLevel;}
 
     public static int getGameWidth(){return gameWidth;}
-
-    public static Map<String, String> getQuestionsArray(){
-        return levelQuestions;
-    }
-
-    public static void setQuestionList(Map<String, String> newQuestions){
-        levelQuestions = newQuestions;
-    }
-
-    public static Question getQuestion(){
-        return question;
-    }
-
-    public static void setQuestion(Question newQuestion){
-        question = newQuestion;
-    }
 
     public static ArrayList<Answer> getButtons(){
         return buttons;
@@ -378,5 +328,13 @@ public class Main extends Application {
 
     public static void setPlayerScore(int newPlayerScore){
         playerScore = newPlayerScore;
+    }
+
+    public static int getLevelAmount(){
+        return levelAmount;
+    }
+
+    public static void incrementLevelAmount(){
+        levelAmount++;
     }
 }

@@ -18,6 +18,7 @@ public class QuestionUtils {
         else if(currentLevel == 4){path = "src/sample/data/lv4.txt";}
         else if(currentLevel == 5){path = "src/sample/data/lv5.txt";}
         else if(currentLevel == 6){path = "src/sample/data/lv6.txt";}
+        else throw new NullPointerException("Level doesn't exist");
 
         try {
             bufReader = new BufferedReader(new FileReader(new File(path)));
@@ -44,12 +45,16 @@ public class QuestionUtils {
 
     public static ArrayList<Map> initializeQuestions(){
         allLevels = new ArrayList<>();
-        allLevels.add(shuffleQuestions(QuestionUtils.getQuestions(1)));
-        allLevels.add(shuffleQuestions(QuestionUtils.getQuestions(2)));
-        allLevels.add(shuffleQuestions(QuestionUtils.getQuestions(3)));
-        allLevels.add(shuffleQuestions(QuestionUtils.getQuestions(4)));
-        allLevels.add(shuffleQuestions(QuestionUtils.getQuestions(5)));
-        allLevels.add(shuffleQuestions(QuestionUtils.getQuestions(6)));
+
+        int i = 1;
+        while (true){
+            try{
+                allLevels.add(shuffleQuestions(QuestionUtils.getQuestions(i)));
+                Main.incrementLevelAmount();
+                i++;
+            }
+            catch(NullPointerException e){ break; }
+        }
         return allLevels;
     }
 

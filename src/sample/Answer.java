@@ -83,8 +83,6 @@ public class Answer extends GridPane {
                 }
             }
         }
-//        System.out.println("Questions left: " + questionsLeft);
-//        System.out.println("All questions: " + allQuestions);
         answers.clear();
     }
 
@@ -107,17 +105,16 @@ public class Answer extends GridPane {
             buttonbubble.setFitWidth(453);
             buttonbubble.setFitHeight(72);
 
-
             buttons.get(0).setTranslateY(buttons.get(0).getTranslateY() - 6);
             buttons.get(0).setTranslateX(23);
 
             for (int i = 0; i < buttons.size(); i++) {
                 if(i != 0){
+                    buttons.get(i).setButtonToWhite();
                     buttons.get(i).setTranslateY(buttons.get(0).getTranslateY() + 70 * i);
                     buttons.get(i).setTranslateX(buttons.get(0).getTranslateX() + 4);
                 }
             }
-//            buttons.get(0).setTranslateX(buttons.get(0).getTranslateX() + 4);
             text.setWrappingWidth(buttonbubble.getFitWidth());
         }
         buttonbubble.setImage(buttonImg);

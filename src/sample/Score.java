@@ -21,22 +21,12 @@ public class Score extends Pane {
         playerScore = 0;
         scoreBarWidth = 300;
 
-//        Rectangle scoreBar = new Rectangle(scoreBarWidth, 30);
         ImageView scoreBar = new ImageView("sample/resources/img/scorebar.png");
-//        scoreBar.setFill(Color.WHITE);
-//        scoreBar.setStroke(Color.BLACK);
-//        scoreBar.setStrokeWidth(2);
-//        scoreBar.setArcHeight(5);
-//        scoreBar.setArcWidth(5);
 
         scoreProgress = new Rectangle(0, 22);
         scoreProgress.setX(8);
         scoreProgress.setY(8);
         scoreProgress.setFill(Color.LIMEGREEN);
-
-//        maxScoreToWidth = scoreBarWidth / maxScore;
-//        playerScoreToWidth = playerScore * maxScoreToWidth;
-
 
         this.getChildren().add(scoreBar);
         this.getChildren().add(scoreProgress);
@@ -60,7 +50,6 @@ public class Score extends Pane {
 
     public void setMaxScore(int maxScore){
         this.maxScore = maxScore;
-//        this.maxScore = 2;
         maxScoreToWidth = scoreBarWidth / maxScore;
     }
     public int getMaxScore(){
